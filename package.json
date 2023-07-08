@@ -1,0 +1,8 @@
+{
+  "name": "betterbet",
+  "workspaces": [
+    "backend",
+    "betterbet",
+    "shared"
+  ]
+}

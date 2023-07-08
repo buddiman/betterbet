@@ -1,0 +1,1 @@
+import { Bet, BetInstance, User } from './models/models'

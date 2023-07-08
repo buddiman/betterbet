@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  username    String
+  password    String
+  email       String
+  isAdmin     Boolean
+  BetInstance BetInstance[]
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  from        DateTime
+  to          DateTime
+  Bet         Bet[]
+}
+
+model SportType {
+  id   Int    @id @default(autoincrement())
+  name String
+  Bet  Bet[]
+}
+
+model League {
+  id          Int    @id @default(autoincrement())
+  name        String
+  countryCode String
+  Bet         Bet[]
+}
+
+model Bet {
+  id                  Int           @id @default(autoincrement())
+  type                String
+  typeCondition       String?
+  teamHomeDescription String
+  teamAwayDescription String
+  teamHomeUrl         String?
+  teamAwayUrl         String?
+  league              League        @relation(fields: [leagueId], references: [id])
+  leagueId            Int
+  sportType           SportType     @relation(fields: [sportTypeId], references: [id])
+  sportTypeId         Int
+  question            String?
+  date                DateTime
+  result              String?
+  url                 String?
+  event               Event         @relation(fields: [eventId], references: [id])
+  eventId             Int
+  BetInstance         BetInstance[]
+}
+
+model BetInstance {
+  bet     Bet    @relation(fields: [betId], references: [id])
+  betId   Int
+  user    User   @relation(fields: [userId], references: [id])
+  userId  Int
+  userBet String
+  points  Int
+
+  @@unique([userId, betId])
+}
