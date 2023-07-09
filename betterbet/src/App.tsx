@@ -1,5 +1,7 @@
 import React from 'react'
-import { Box, CssBaseline, Paper, Typography } from "@mui/material"
+import { Box, CssBaseline } from "@mui/material"
+import { routes } from "./routes"
+import {  BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
@@ -12,14 +14,17 @@ function App() {
             alignItems="center"
             flexDirection="column"
         >
-          <Paper
-              elevation={3}
-              sx={{ padding: "1rem", backgroundColor: "secondary.light" }}
-          >
-            <Typography color="primary.dark" variant="h1">
-              Starter App
-            </Typography>
-          </Paper>
+            <Router>
+                <Routes>
+                    {routes.map((route) => (
+                        <Route
+                            key={route.key}
+                            path={route.path}
+                            element={<route.component />}
+                        />
+                    ))}
+                </Routes>
+            </Router>
         </Box>
       </div>
   );
