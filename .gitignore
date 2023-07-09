@@ -3,4 +3,5 @@
 /**/tsconfig.tsbuildinfo
 /**/prisma/client
 /**/scraper/drivers
+/**/build
 .idea
