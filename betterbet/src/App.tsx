@@ -3,10 +3,13 @@ import { Box, CssBaseline } from "@mui/material"
 import { routes } from "./routes"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function App() {
     return (
         <div>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
             <CssBaseline/>
             <Box
                 height="100vh"
@@ -28,6 +31,7 @@ function App() {
                     </Routes>
                 </Router>
             </Box>
+            </LocalizationProvider>
         </div>
     );
 }
