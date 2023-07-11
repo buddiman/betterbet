@@ -8,6 +8,7 @@ import { createBet, getBet } from "./database/dto/bet";
 import { createEvent } from "./database/dto/event";
 import { createSportType } from "./database/dto/sportType";
 import { createLeague } from "./database/dto/league";
+import { scrape } from "./scraper/scraper";
 
 const app: Express = express();
 
@@ -20,6 +21,7 @@ const port = process.env.PORT || 8000;
 app.listen(port, async () => {
     console.log("STARTUP")
     //await testdb()
+    await scrape('https://www.flashscore.com/match/bFKqfulf/#/match-summary/match-summary')
     console.log(`Example app listening on port ${port}`)
 });
 
