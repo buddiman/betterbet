@@ -38,7 +38,6 @@ export async function scrape(url: string) {
         leagueId: undefined,
         question: undefined,
         result: undefined,
-        sportTypeId: undefined,
         type: "1X2",
         typeCondition: undefined,
         id: undefined,
@@ -50,6 +49,7 @@ export async function scrape(url: string) {
     }
 
     const league: League = {
+        sportTypeId: undefined,
         countryCode: undefined,
         id: undefined,
         name: obj['header']['tournament']['tournament']
