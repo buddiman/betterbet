@@ -23,3 +23,11 @@ export function getEvent(eventId: number): Promise<Event> {
         }
     })
 }
+
+export function getEvents(): Promise<Event[]> {
+    return prisma.event.findMany({
+        orderBy: {
+            id: 'asc'
+        }
+    })
+}

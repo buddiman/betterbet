@@ -1,4 +1,4 @@
-import { League } from "../../../shared/models/league"
+import { League } from "shared/models/league"
 import prisma from "../dbConfig";
 
 export async function createLeague(league: League): Promise<League> {

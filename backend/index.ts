@@ -43,7 +43,8 @@ async function testdb() {
     await createLeague({
         id: undefined,
         name: "Bundesliga",
-        countryCode: "de"
+        countryCode: "de",
+        sportTypeId: 1
     })
 
     const b: Bet = {
@@ -53,7 +54,6 @@ async function testdb() {
         leagueId: 1,
         question: "Question",
         result: "result",
-        sportTypeId: 1,
         teamAwayDescription: "awaydesc",
         teamAwayUrl: "awayurl",
         teamHomeDescription: "homedesc",

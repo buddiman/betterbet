@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createEvent, getEvent, updateEvent } from '../database/dto/event'
+import { createEvent, getEvent, getEvents, updateEvent } from '../database/dto/event'
 
 export const eventRoute = express.Router()
 
@@ -49,6 +49,20 @@ eventRoute.get('/event', async (req:Request, res: Response): Promise<void> => {
         res.json({
             success: false,
             message: "ERROR while fetching a event with id " + eventId
+        })
+    }
+})
+
+eventRoute.get('/events', async (req:Request, res: Response): Promise<void> => {
+    try {
+        const events = await getEvents()
+        res.json({
+            event: events
+        })
+    } catch (e: any) {
+        res.json({
+            success: false,
+            message: "ERROR while fetching all events"
         })
     }
 })
