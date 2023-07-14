@@ -4,14 +4,11 @@ import BetWidget from '../components/BetWidget'
 import { purple, red, grey } from '@mui/material/colors'
 import axios from "axios";
 import {Event} from "shared/models/event"
+import api from "../api"
 
 const Bets: FC<any> = (): ReactElement => {
     const [events, setEvents] = useState<Event[]>([]);
     const [selectedEvent, setSelectedEvent] = useState<number>()
-
-    const client = axios.create({
-        baseURL: "http://localhost:8000"
-    });
 
     const handleSelectedEventChange = (key: string | undefined) => {
         console.log(key)
@@ -27,7 +24,7 @@ const Bets: FC<any> = (): ReactElement => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await client.get("/events")
+                const response = await api.get("/events")
                 setEvents(response.data.event);
             } catch (error) {
                 console.error('Error fetching data from API:', error);
