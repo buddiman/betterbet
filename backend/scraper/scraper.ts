@@ -1,16 +1,18 @@
-import { Bet } from "../../shared/models/bet"
-import { League } from "../../shared/models/league"
+import Os from 'os'
+
+import { Bet } from "shared/models/bet"
+import { League } from "shared/models/league"
 import { Options } from "selenium-webdriver/firefox";
 import { Builder, By } from "selenium-webdriver";
 import { getCountryCodeByName } from '../util/countrycode';
 import { createLeague, findLeague } from "../database/dto/league";
 
-// const {Builder, By} = require('selenium-webdriver');
-
 export async function scrape(url: string) {
     const ffOptions = new Options()
-        .setBinary('C:\\Program Files\\Mozilla Firefox\\firefox.exe')       // TODO from env and OS specific
         .headless()
+    if(Os.platform() === 'win32') {
+        ffOptions.setBinary('C:\\Program Files\\Mozilla Firefox\\firefox.exe')
+    }
     const driver = await new Builder()
         .forBrowser('firefox')
         .setFirefoxOptions(ffOptions)
