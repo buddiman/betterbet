@@ -1,13 +1,13 @@
-import React, { ChangeEvent, FC, ReactElement, useEffect, useRef, useState } from "react";
+import React, { FC, ReactElement, useEffect, useState } from "react";
 import { Grid, Button, Avatar, Typography, Link, TextField, Stack } from "@mui/material";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Bet } from "shared/models/bet";
-import axios from "axios";
 import IUser from "../types/user.type";
 import * as AuthService from "../services/auth.service";
 import { BetInstance } from "shared/models/betInstance";
+import api from "../api"
 
 interface BetWidgetProps {
     eventId: number | undefined
@@ -50,7 +50,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     useEffect(() => {
         const updateBetInstance = async () => {
-            const response = await client.put('/betInstance', {
+            const response = await api.put('/betInstance', {
                 betId: bet.id,
                 userId: currentUser?.id,
                 userBet: homeResult + ':' + awayResult,
@@ -63,10 +63,6 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     }, [homeResult, awayResult])
 
-    const client = axios.create({
-        baseURL: "http://localhost:8000"
-    });
-
     useEffect(() => {
         const user = AuthService.getCurrentUser()
         setCurrentUser(user)
@@ -77,7 +73,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     useEffect(() => {
         console.log("selected button: " + selectedButton)
         const updateBetInstance = async () => {
-            const response = await client.put('/betInstance', {
+            const response = await api.put('/betInstance', {
                 betId: bet.id,
                 userId: currentUser?.id,
                 userBet: selectedButton,
@@ -111,7 +107,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                     setIsLocked(false)
                 }
 
-                const response = await client.get(`/betInstance/${currentUser?.id}/${bet.id}`)
+                const response = await api.get(`/betInstance/${currentUser?.id}/${bet.id}`)
                 const betInstance = response.data
                 if (response.data.betInstance) {
                     if (bet.type === 'result' && response.data.betInstance.userBet) {
@@ -133,7 +129,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await client.get(`/bets/${eventId}`)
+                const response = await api.get(`/bets/${eventId}`)
                 if (response.data.bets.length === 0) {
                     setBets([dummyBet])
                     console.log("EMPTY")
@@ -141,7 +137,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                     setBets(response.data.bets)
                 }
                 if (bet.id) {
-                    const responseBetInstance = await client.get(`/betInstance/${currentUser?.id}/${bet.id}`)
+                    const responseBetInstance = await api.get(`/betInstance/${currentUser?.id}/${bet.id}`)
                     const betInstance = responseBetInstance.data
                     console.log(betInstance)
                 }
