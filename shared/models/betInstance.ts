@@ -1,6 +1,6 @@
 export interface BetInstance {
     userId: number,
     betId: number,
-    bet: string
+    userBet: string
     points: number
 }

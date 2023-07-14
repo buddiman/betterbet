@@ -23,3 +23,14 @@ export function getBet(betId: number): Promise<Bet> {
         }
     })
 }
+
+export function getBetsForEvent(eventId: number): Promise<Bet[]> {
+    return prisma.bet.findMany({
+        where: {
+            eventId: eventId
+        },
+        orderBy: {
+            id: 'asc'
+        }
+    })
+}

@@ -2,6 +2,8 @@ import { Bet } from "../../shared/models/bet"
 import { League } from "../../shared/models/league"
 import { Options } from "selenium-webdriver/firefox";
 import { Builder, By } from "selenium-webdriver";
+import { getCountryCodeByName } from '../util/countrycode';
+import { createLeague, findLeague } from "../database/dto/league";
 
 // const {Builder, By} = require('selenium-webdriver');
 
@@ -38,7 +40,6 @@ export async function scrape(url: string) {
         leagueId: undefined,
         question: undefined,
         result: undefined,
-        sportTypeId: undefined,
         type: "1X2",
         typeCondition: undefined,
         id: undefined,
@@ -49,11 +50,25 @@ export async function scrape(url: string) {
         url: url
     }
 
-    const league: League = {
-        countryCode: undefined,
-        id: undefined,
-        name: obj['header']['tournament']['tournament']
+    let language = "de"
+    if(url.includes("flashcore.com")) {
+        language = "en"
+    }
 
+    const league: League = {
+        sportTypeId: parseInt(obj["sport_id"]),
+        countryCode: getCountryCodeByName(obj['header']['tournament']['category'], language),
+        id: undefined,
+        name: obj['header']['tournament']['link'].split('/').filter(s => s)[2]
+    }
+
+    const existingLeague = await findLeague(league.name, league.sportTypeId, league.countryCode)
+
+    if(existingLeague) {
+        bet.leagueId = existingLeague.id
+    } else {
+        const newLeague: League = await createLeague(league)
+        bet.leagueId = newLeague.id
     }
 
     return {
