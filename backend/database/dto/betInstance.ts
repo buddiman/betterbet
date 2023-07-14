@@ -8,14 +8,15 @@ export async function createBetInstance(betInstance: BetInstance) {
 }
 
 export async function updateBetInstance(betInstance: BetInstance): Promise<BetInstance> {
-    return prisma.betInstance.update({
+    return prisma.betInstance.upsert({
+        create: betInstance,
+        update: betInstance,
         where: {
             userId_betId: {
                 userId: betInstance.userId,
                 betId: betInstance.betId
             }
         },
-        data: betInstance
     })
 }
 
