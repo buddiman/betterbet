@@ -4,5 +4,12 @@
     "backend",
     "betterbet",
     "shared"
-  ]
+  ],
+  "scripts": {
+    "build": "npm run build:db -w backend && npm run build -w shared && npm run build -w backend && npm run build -w betterbet",
+    "start:prod": "concurrently --kill-others \"npm run start:prod-db -w backend\" \"npm run start:prod -w backend\" \"npm run start:prod -w betterbet\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  }
 }
