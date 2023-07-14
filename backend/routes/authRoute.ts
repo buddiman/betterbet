@@ -38,6 +38,9 @@ authRoute.post('/auth/login', async (req: Request, res: Response): Promise<void>
         if(result) {
             const jwt = sign({userId: user.id}, secretKey, {expiresIn: '1h'})
             res.json({
+                id: user.id,
+                name: user.username,
+                isAdmin: user.isAdmin,
                 jwt,
                 success: true,
                 message: 'authenticated: ' + result
