@@ -7,7 +7,6 @@ export interface Bet{
     teamAwayDescription: string
     teamAwayUrl:string | null
     leagueId: number // leagueId
-    sportTypeId: number
     question: string | null
     date: Date
     result: string | null

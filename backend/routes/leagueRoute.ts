@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createLeague, getLeague, updateLeague } from '../database/dto/league'
+import { createLeague, getAllLeagues, getLeague, updateLeague } from '../database/dto/league'
 
 export const leagueRoute = express.Router()
 
@@ -50,6 +50,22 @@ leagueRoute.get('/league', async (req:Request, res: Response): Promise<void> => 
         res.json({
             success: false,
             message: "ERROR while fetching a bet with id " + leagueId
+        })
+    }
+})
+
+leagueRoute.get('/leagues', async (req:Request, res: Response): Promise<void> => {
+    try {
+        const leagues = await getAllLeagues()
+        res.json({
+            league: leagues,
+            success: true,
+            message: 'fetched all leagues with id '
+        })
+    } catch (e: any) {
+        res.json({
+            success: false,
+            message: "ERROR while fetching all leagues"
         })
     }
 })

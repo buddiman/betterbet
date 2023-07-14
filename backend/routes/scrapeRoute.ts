@@ -4,7 +4,7 @@ import { scrape } from '../scraper/scraper'
 
 export const scrapeRoute = express.Router()
 
-scrapeRoute.get('/scrape', async (req:Request, res: Response): Promise<void> => {
+scrapeRoute.post('/scrape', async (req:Request, res: Response): Promise<void> => {
     const url = req.body.url
 
     try {
