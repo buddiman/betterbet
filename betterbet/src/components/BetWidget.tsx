@@ -57,7 +57,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                 points: 0
             })
         }
-        if (!(homeResult === '-' && awayResult === '-')) {
+        if (!(homeResult === '-' || awayResult === '-')) {
             updateBetInstance()
         }
 
