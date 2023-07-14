@@ -1,12 +1,9 @@
-import React, { FC, ReactNode, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     AppBar,
-    Box, Button,
-    Container,
+    Box,
     CssBaseline,
-    IconButton,
-    Menu,
-    MenuItem, Stack,
+    Stack,
     Toolbar,
     Typography
 } from "@mui/material"
@@ -14,7 +11,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import IUser from "./types/user.type";
 import * as AuthService from "./services/auth.service";
-import MenuIcon from "@mui/icons-material/Menu";
 import { Routes, Route, Link } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
