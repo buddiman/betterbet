@@ -1,14 +1,11 @@
 import Os from 'os'
 
-import { Bet } from "../../shared/models/bet"
-import { League } from "../../shared/models/league"
+import { Bet } from "shared/models/bet"
+import { League } from "shared/models/league"
 import { Options } from "selenium-webdriver/firefox";
 import { Builder, By } from "selenium-webdriver";
 import { getCountryCodeByName } from '../util/countrycode';
 import { createLeague, findLeague } from "../database/dto/league";
-
-
-// const {Builder, By} = require('selenium-webdriver');
 
 export async function scrape(url: string) {
     const ffOptions = new Options()
