@@ -16,10 +16,24 @@ export async function updateLeague(league: League): Promise<League> {
     })
 }
 
+export function findLeague(name: string, sporttype: number, countrycode: string): Promise<League> {
+    return prisma.league.findFirst({
+        where: {
+            name: name,
+            sportTypeId: sporttype,
+            countryCode: countrycode
+        }
+    })
+}
+
 export function getLeague(leagueId: number): Promise<League> {
     return prisma.league.findUnique({
         where: {
             id: leagueId
         }
     })
+}
+
+export function getAllLeagues(): Promise<League[]> {
+    return prisma.league.findMany()
 }
