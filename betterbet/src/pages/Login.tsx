@@ -1,35 +1,29 @@
 import React, { ReactElement, FC, useState } from "react";
 import { Box, TextField, Button } from "@mui/material";
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { login } from "../services/auth.service"
 
 interface LoginFormProps {
-    onLoginSuccess: (token: string) => void;
+
 }
 
-const Login: FC<LoginFormProps> = ({onLoginSuccess}): ReactElement => {
+const Login: FC<LoginFormProps> = (): ReactElement => {
+    let navigate: NavigateFunction = useNavigate();
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const client = axios.create({
-        baseURL: "http://localhost:8000"
-    });
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         try {
-            const response = await client.post('/auth/login', {
-                username,
-                password
-            })
-
-            if(response.data.success) {
-                const token = response.data.jwt;
-                console.log(token)
-                localStorage.setItem('jwt', token);
-                onLoginSuccess(token);
-            } else {
-                console.log(response.data.message)
-            }
-
+            login(username, password).then(
+                () => {
+                    navigate("/")
+                    window.location.reload()
+                }
+            )
         } catch (error) {
             console.log(error)
         }

@@ -1,36 +1,33 @@
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import axios from 'axios';
+import { register } from "../services/auth.service";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
 interface RegisterFormProps {
-    onRegisterSuccess: () => void;
+
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
+const RegisterForm: React.FC<RegisterFormProps> = () => {
+    let navigate: NavigateFunction = useNavigate();
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const client = axios.create({
-        baseURL: "http://localhost:8000"
-    });
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
-            const response = await client.post('/auth/register', {
-                user: {
-                    id: undefined,
-                    username: username,
-                    password: password,
-                    email: email,
-                    isAdmin: false
+            register(username, email, password).then(
+                () => {
+                    console.log("Registered new User!")
+                    navigate("/login")
+                    window.location.reload()
                 }
-            });
+            )
 
-            console.log("Registered new User!")
-            onRegisterSuccess();
+
         } catch (error) {
                 console.log(error)
         }
