@@ -6,6 +6,7 @@ import { eventRoute } from "./eventRoute";
 import { authRoute } from "./authRoute";
 import { scrapeRoute } from "./scrapeRoute";
 import { betInstanceRoute } from "./betInstanceRoute";
+import { sportTypeRoute } from "./sportTypeRoute";
 
 export const routes = express.Router()
 
@@ -16,3 +17,4 @@ routes.use(eventRoute)
 routes.use(authRoute)
 routes.use(scrapeRoute)
 routes.use(betInstanceRoute)
+routes.use(sportTypeRoute)

@@ -1,14 +1,12 @@
 import React, { ReactElement, FC, useEffect, useState } from "react";
-import { Box, Typography, Button, ButtonGroup, Stack } from "@mui/material";
+import { Box, Button, ButtonGroup, Stack } from "@mui/material";
 import BetWidget from '../components/BetWidget'
-import { purple, red, grey } from '@mui/material/colors'
-import axios from "axios";
 import {Event} from "shared/models/event"
 import api from "../api"
 
 const Bets: FC<any> = (): ReactElement => {
     const [events, setEvents] = useState<Event[]>([]);
-    const [selectedEvent, setSelectedEvent] = useState<number>()
+    const [selectedEvent, setSelectedEvent] = useState<number>(1)
 
     const handleSelectedEventChange = (key: string | undefined) => {
         console.log(key)

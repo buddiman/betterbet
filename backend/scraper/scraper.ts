@@ -1,40 +1,47 @@
-import Os from 'os'
-
 import { Bet } from "shared/models/bet"
 import { League } from "shared/models/league"
-import { Options } from "selenium-webdriver/firefox";
-import { Builder, By } from "selenium-webdriver";
 import { getCountryCodeByName } from '../util/countrycode';
 import { createLeague, findLeague } from "../database/dto/league";
+import axios from "axios"
+import { load } from 'cheerio'
 
 export async function scrape(url: string) {
-    const ffOptions = new Options()
-        .headless()
-    if(Os.platform() === 'win32') {
-        ffOptions.setBinary('C:\\Program Files\\Mozilla Firefox\\firefox.exe')
+    if (url.includes("flashscore")) {
+        return await scrapeFlashscore(url)
     }
-    const driver = await new Builder()
-        .forBrowser('firefox')
-        .setFirefoxOptions(ffOptions)
-        .build()
+}
 
-    await driver.get(url)
+async function scrapeFlashscore(url: string) {
+    try {
+        const response = await axios.get(url)
+        const $ = load(response.data)
 
-    const scripts = await driver.findElements(By.tagName('script'))
+        let script: string | null = null
+        $('body script').each((index, element) => {
+            const scriptContent = $(element).html()
+            if (scriptContent && scriptContent.startsWith('\n\t\t\twindow.environment')) {
+                script = $(element).html()
+                return false
+            }
+        })
 
-    let fullScript: string
-
-    for (const s of scripts) {
-        const text = await s.getAttribute('innerHTML')
-        if (text.startsWith('\n\t\t\twindow.environment')) {
-            fullScript = text
-                .trim().replace("window.environment = ", '')
-                .slice(0, -1)
-            break
+        if (script) {
+            return await extractDataFromFlashscoreScript(script, url)
+        } else {
+            console.log('Desired script not found')
         }
-    }
 
-    let obj = JSON.parse(fullScript)
+    } catch (error) {
+        console.error('Error:', error)
+    }
+}
+
+async function extractDataFromFlashscoreScript(script: string, url: string) {
+    const cleanedScript = script
+        .trim().replace("window.environment = ", '')
+        .slice(0, -1)
+
+    let obj = JSON.parse(cleanedScript)
 
     const bet: Bet = {
         date: new Date(obj['common_feed'].find(e => e.hasOwnProperty('DC'))['DC'] * 1000),
@@ -53,7 +60,7 @@ export async function scrape(url: string) {
     }
 
     let language = "de"
-    if(url.includes("flashcore.com")) {
+    if (url.includes("flashcore.com")) {
         language = "en"
     }
 
@@ -66,7 +73,7 @@ export async function scrape(url: string) {
 
     const existingLeague = await findLeague(league.name, league.sportTypeId, league.countryCode)
 
-    if(existingLeague) {
+    if (existingLeague) {
         bet.leagueId = existingLeague.id
     } else {
         const newLeague: League = await createLeague(league)
