@@ -8,6 +8,9 @@ import IUser from "../types/user.type";
 import * as AuthService from "../services/auth.service";
 import { BetInstance } from "shared/models/betInstance";
 import api from "../api"
+import { SportType } from "shared/models/sportType";
+import { League } from "shared/models/league";
+import ReactCountryFlag from "react-country-flag"
 
 interface BetWidgetProps {
     eventId: number | undefined
@@ -37,6 +40,9 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     const [bet, setBet] = useState<Bet>(dummyBet)
     const [betIndex, setBetIndex] = useState<number>(0)
     const [betInstance, setBetInstance] = useState<BetInstance | undefined>(undefined)
+    const [sportTypes, setSportTypes] = useState<SportType[] | undefined>(undefined)
+    const [sportTypeName, setSportTypeName] = useState<string | undefined>('')
+    const [league, setLeague] = useState<League | undefined>(undefined)
     const [homeResult, setHomeResult] = useState('-')
     const [awayResult, setAwayResult] = useState('-')
     const [isLocked, setIsLocked] = useState(false)
@@ -66,7 +72,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     useEffect(() => {
         const user = AuthService.getCurrentUser()
         setCurrentUser(user)
-        console.log(user)
+
     }, [])
 
 
@@ -107,6 +113,16 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                     setIsLocked(false)
                 }
 
+                const leagueResponse = await api.get(`/league/${bet.leagueId}`)
+                setLeague(leagueResponse.data.league)
+
+                if (league && sportTypes) {
+                    const type = sportTypes.find(e => e.id === league.sportTypeId)
+                    if (type) {
+                        setSportTypeName(type.name)
+                    }
+                }
+
                 const response = await api.get(`/betInstance/${currentUser?.id}/${bet.id}`)
                 const betInstance = response.data
                 if (response.data.betInstance) {
@@ -136,6 +152,8 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                 } else {
                     setBets(response.data.bets)
                 }
+                const responseSportTypes = await api.get('/sporttypes')
+                setSportTypes(responseSportTypes.data.sportTypes)
                 if (bet.id) {
                     const responseBetInstance = await api.get(`/betInstance/${currentUser?.id}/${bet.id}`)
                     const betInstance = responseBetInstance.data
@@ -180,11 +198,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                 alignItems: 'center',
                 backgroundImage: 'url(assets/bg-soccer-large.jpg)',
                 backgroundSize: '100% 100%',
-                backgroundColor: 'primary.dark',
-                '&:hover': {
-                    backgroundColor: 'primary.main',
-                    opacity: [0.9, 0.8, 0.7],
-                },
+                backgroundColor: 'primary.dark'
             }}
         >
             <Grid container spacing={0} justifyContent="center" alignItems="center"
@@ -242,20 +256,32 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                     </Paper>
                 </Grid>
                 <Grid item xs={4} style={gridItemStyle}>
-                    <Stack direction="row" spacing={2}>
-                        (LAND) - (SPORT) - (LIGA) -
-                        {bet.url && (
-                            <Link href={bet.url} target="_blank">
-                                <OpenInNewIcon/>
-                            </Link>
-                        )}
-                    </Stack>
-                    <Stack direction="row" spacing={2}>
-                        <Typography variant="h5" gutterBottom>
-                            {bet.date && (
-                                new Date(bet.date).toLocaleString('de-DE'))}
-                        </Typography>
-                    </Stack>
+                    <Paper variant="outlined">
+                        <Stack spacing={1}>
+                            {league && (
+                                <Typography variant="body2" gutterBottom>
+                                    <ReactCountryFlag
+                                        countryCode={league.countryCode}
+                                        className="emojiFlag" style={{
+                                        fontSize: '2em',
+                                        lineHeight: '2em',
+                                    }}
+                                    /> - {sportTypeName} - {league.name}
+                                </Typography>
+
+                            )}
+                            {bet.url && (
+                                <Button variant='outlined' href={bet.url} target="_blank">
+                                    <OpenInNewIcon/> Infos
+                                </Button>
+
+                            )}
+                            <Typography variant="h6" gutterBottom style={{textAlign: "center"}}>
+                                {bet.date && (
+                                    new Date(bet.date).toLocaleString('de-DE'))}
+                            </Typography>
+                        </Stack>
+                    </Paper>
                 </Grid>
                 <Grid item xs={3} style={gridItemStyle}>
                     <Paper variant="outlined">
