@@ -44,7 +44,7 @@ leagueRoute.get('/league/:leagueId', async (req:Request, res: Response): Promise
         const league = await getLeague(leagueId)
         res.json({
             success: true,
-            message: 'fetched league with id ' + league.id
+            league: league
         })
     } catch (e: any) {
         res.json({
