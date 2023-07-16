@@ -1,4 +1,4 @@
-import { Bet } from "../../../shared/models/bet"
+import { Bet } from "shared/models/bet"
 import prisma from "../dbConfig";
 
 export async function createBet(bet: Bet): Promise<Bet> {
@@ -30,7 +30,7 @@ export function getBetsForEvent(eventId: number): Promise<Bet[]> {
             eventId: eventId
         },
         orderBy: {
-            id: 'asc'
+            date: 'asc'
         }
     })
 }

@@ -23,3 +23,7 @@ export function getSportType(sportTypeId: number): Promise<SportType> {
         }
     })
 }
+
+export function getSportTypes(): Promise<SportType[]> {
+    return prisma.sportType.findMany()
+}
