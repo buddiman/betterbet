@@ -49,16 +49,18 @@ export default function AddBet(props: AddBetProps) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get("/events")
-                setEventList(response.data.event);
-                const leagueResponse = await api.get("/leagues")
-                setLeagueList(leagueResponse.data.league)
+                if(isOpened) {
+                    const response = await api.get("/events")
+                    setEventList(response.data.event);
+                    const leagueResponse = await api.get("/leagues")
+                    setLeagueList(leagueResponse.data.league)
+                }
             } catch (error) {
                 console.error('Error fetching data from API:', error);
             }
         };
         fetchData();
-    }, [])
+    }, [isOpened])
 
     const addBet = async () => {
         const bet = {
