@@ -125,6 +125,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
                 const response = await api.get(`/betInstance/${currentUser?.id}/${bet.id}`)
                 const betInstance = response.data
+                setBetInstance(response.data.betInstance)
                 if (response.data.betInstance) {
                     if (bet.type === 'result' && response.data.betInstance.userBet) {
                         const result = response.data.betInstance.userBet.split(':')
