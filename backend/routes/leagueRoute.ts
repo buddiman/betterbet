@@ -37,8 +37,8 @@ leagueRoute.put('/league', async (req: Request, res: Response): Promise<void> =>
     }
 })
 
-leagueRoute.get('/league', async (req:Request, res: Response): Promise<void> => {
-    const leagueId = req.body
+leagueRoute.get('/league/:leagueId', async (req:Request, res: Response): Promise<void> => {
+    const leagueId = parseInt(req.params.leagueId, 10)
 
     try {
         const league = await getLeague(leagueId)
