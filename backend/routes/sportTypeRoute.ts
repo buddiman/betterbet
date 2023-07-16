@@ -3,7 +3,7 @@ import { getSportTypes } from "../database/dto/sportType";
 
 export const sportTypeRoute = express.Router()
 
-sportTypeRoute.get('/events', async (req:Request, res: Response): Promise<void> => {
+sportTypeRoute.get('/sporttypes', async (req:Request, res: Response): Promise<void> => {
     try {
         const sportTypes = await getSportTypes()
         res.json({
