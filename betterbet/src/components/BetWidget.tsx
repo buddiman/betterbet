@@ -157,7 +157,9 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                     if (bet.type !== 'result' && response.data.betInstance.userBet) {
                         setSelectedButton(response.data.betInstance.userBet)
                     }
-                    console.log(betInstance)
+                    if (bet.type !== 'result' && !response.data.betInstance.userBet) {
+                        setSelectedButton('')
+                    }
                 }
             }
         };
