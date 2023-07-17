@@ -16,6 +16,15 @@ interface BetWidgetProps {
     eventId: number | undefined
 }
 
+const betTypes = [
+    {key: "1X2", sentence: "Wie ist die Tendenz zu Spielende (Ohne Verlängerung)?"},
+    {key: "winner", sentence: "Wer gewinnt das Spiel?"},
+    {key: "result", sentence: "Wie ist das Spielergebnis zu Spielende (Ohne Verlängerung)?"},
+    {key: "overunder", sentence: "Über oder unter "},
+    {key: "question", sentence: ""},
+    {key: "1or2", sentence: "Wer "},
+]
+
 const dummyBet: Bet = {
     date: new Date(),
     eventId: 0,
@@ -160,8 +169,10 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                         setSelectedButton(betInstance)
                     }
                 } else if (bet.type !== 'result') {
-                    console.log("NO BUTTON SAVED!")
                     setSelectedButton('')
+                } else if (bet.type === 'result') {
+                    setHomeResult('-')
+                    setAwayResult('-')
                 }
             }
         };
@@ -478,7 +489,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                 <Grid item xs={10} style={gridItemStyle}>
                     <Paper variant="outlined">
                         <Typography style={{wordWrap: 'break-word', overflowWrap: 'break-word'}}>
-                            {bet.type} - {bet.typeCondition} - {bet.question}
+                            {betTypes.find((e) => e.key === bet.type)?.sentence ?? ""}{bet.typeCondition}{bet.question}
                         </Typography>
                     </Paper>
                 </Grid>
