@@ -54,19 +54,38 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
         }
     };
 
-    useEffect(() => {
-        const updateBetInstance = async () => {
-            const response = await api.put('/betInstance', {
-                betId: bet.id,
-                userId: currentUser?.id,
-                userBet: homeResult + ':' + awayResult,
-                points: 0
-            })
+    const borderColor = () => {
+        if(betInstance) {
+            if (betInstance.points < 0) {
+                return 'grey';
+            } else if (betInstance.points === 0) {
+                return 'red';
+            } else if (betInstance.points === 1) {
+                return 'yellow';
+            } else if (betInstance.points === 2) {
+                return 'green';
+            } else if (betInstance.points === 3) {
+                return 'purple';
+            }
+        } else {
+            return 'grey'
         }
-        if (!(homeResult === '-' || awayResult === '-')) {
-            updateBetInstance()
-        }
+    }
 
+    useEffect(() => {
+        if(!isLocked) {
+            const updateBetInstance = async () => {
+                const response = await api.put('/betInstance', {
+                    betId: bet.id,
+                    userId: currentUser?.id,
+                    userBet: homeResult + ':' + awayResult,
+                    points: -1
+                })
+            }
+            if (!(homeResult === '-' || awayResult === '-')) {
+                updateBetInstance()
+            }
+        }
     }, [homeResult, awayResult])
 
     useEffect(() => {
@@ -78,16 +97,18 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     useEffect(() => {
         console.log("selected button: " + selectedButton)
-        const updateBetInstance = async () => {
-            const response = await api.put('/betInstance', {
-                betId: bet.id,
-                userId: currentUser?.id,
-                userBet: selectedButton,
-                points: 0
-            })
-        }
-        if (bet.type !== 'result') {
-            updateBetInstance()
+        if(!isLocked) {
+            const updateBetInstance = async () => {
+                const response = await api.put('/betInstance', {
+                    betId: bet.id,
+                    userId: currentUser?.id,
+                    userBet: selectedButton,
+                    points: -1
+                })
+            }
+            if (bet.type !== 'result') {
+                updateBetInstance()
+            }
         }
     }, [selectedButton])
 
@@ -199,7 +220,9 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                 alignItems: 'center',
                 backgroundImage: 'url(assets/bg-soccer-large.jpg)',
                 backgroundSize: '100% 100%',
-                backgroundColor: 'primary.dark'
+                backgroundColor: 'primary.dark',
+                border: `6px solid ${borderColor()}`,
+                borderRadius: '4px',
             }}
         >
             <Grid container spacing={0} justifyContent="center" alignItems="center"
@@ -219,13 +242,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                 </Grid>
                 <Grid item xs={4} style={gridItemStyle}>
                     <Typography variant="h2" gutterBottom>
-                        -
-                    </Typography>
-                    <Typography variant="h2" gutterBottom>
-                        :
-                    </Typography>
-                    <Typography variant="h2" gutterBottom>
-                        -
+                        {bet.result || "-:-"}
                     </Typography>
                 </Grid>
                 <Grid item xs={3} style={gridItemStyle}>
