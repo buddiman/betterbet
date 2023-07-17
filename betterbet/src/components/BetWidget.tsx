@@ -157,7 +157,9 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                     if (bet.type !== 'result' && response.data.betInstance.userBet) {
                         setSelectedButton(response.data.betInstance.userBet)
                     }
-                    console.log(betInstance)
+                    if (bet.type !== 'result' && !response.data.betInstance.userBet) {
+                        setSelectedButton('')
+                    }
                 }
             }
         };
@@ -442,6 +444,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             value={homeResult}
                             onChange={(e) => setHomeResult(e.target.value)}
                             autoFocus
+                            type="number"
                             margin="dense"
                             id="textFieldHomeResult"
                             label="Heimteam"
@@ -454,6 +457,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             value={awayResult}
                             onChange={(e) => setAwayResult(e.target.value)}
                             autoFocus
+                            type="number"
                             margin="dense"
                             id="textFieldAwayResult"
                             label="Auswärtsteam"
