@@ -160,8 +160,10 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                         setSelectedButton(betInstance)
                     }
                 } else if (bet.type !== 'result') {
-                    console.log("NO BUTTON SAVED!")
                     setSelectedButton('')
+                } else if (bet.type === 'result') {
+                    setHomeResult('-')
+                    setAwayResult('-')
                 }
             }
         };
