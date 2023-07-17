@@ -34,3 +34,14 @@ export function getBetsForEvent(eventId: number): Promise<Bet[]> {
         }
     })
 }
+
+export function getNotEvaluatedBetsInThePast(): Promise<Bet[]> {
+    return prisma.bet.findMany({
+        where: {
+            result: null,
+            date: {
+                lt: new Date()
+            }
+        }
+    })
+}

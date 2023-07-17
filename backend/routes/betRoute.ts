@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createBet, getBet, getBetsForEvent, updateBet } from '../database/dto/bet'
+import { createBet, getBet, getBetsForEvent, getNotEvaluatedBetsInThePast, updateBet } from '../database/dto/bet'
 
 export const betRoute = express.Router()
 
@@ -65,6 +65,20 @@ betRoute.get('/bets/:eventId', async (req:Request, res: Response): Promise<void>
         res.json({
             success: false,
             message: "ERROR while fetching bets for event with id " + eventId
+        })
+    }
+})
+
+betRoute.get('/unevaluatedBets', async (req:Request, res: Response): Promise<void> => {
+    try {
+        const bets = await getNotEvaluatedBetsInThePast()
+        res.json({
+            bets
+        })
+    } catch (e: any) {
+        res.json({
+            success: false,
+            message: "ERROR while fetching not evaluated bets in the past"
         })
     }
 })
