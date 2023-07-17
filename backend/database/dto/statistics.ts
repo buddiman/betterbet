@@ -4,9 +4,9 @@ import prisma from "../dbConfig";
 export async function getBetInstancesPointsPerUserId() {
     return prisma.betInstance.groupBy({
         where: {
-          points: {
-              not: -1
-          }
+            points: {
+                not: -1
+            }
         },
         by: ['userId'],
         _sum: {
@@ -15,3 +15,21 @@ export async function getBetInstancesPointsPerUserId() {
     })
 }
 
+export async function getEventsWithMissingBetInstances(userId: number) {
+    const eventsWithMissingBets = await prisma.event.findMany({
+        select: {
+            Bet: {
+                where: {
+                    BetInstance: {
+                        none: {
+                        }
+                    }
+                }
+            },
+            id: true,
+            name: true
+        },
+    })
+
+    return eventsWithMissingBets
+}
