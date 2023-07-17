@@ -444,6 +444,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             value={homeResult}
                             onChange={(e) => setHomeResult(e.target.value)}
                             autoFocus
+                            type="number"
                             margin="dense"
                             id="textFieldHomeResult"
                             label="Heimteam"
@@ -456,6 +457,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             value={awayResult}
                             onChange={(e) => setAwayResult(e.target.value)}
                             autoFocus
+                            type="number"
                             margin="dense"
                             id="textFieldAwayResult"
                             label="Auswärtsteam"
