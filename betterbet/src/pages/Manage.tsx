@@ -131,7 +131,7 @@ export default function Manage() {
                                             data-type={e.type}
                                             onClick={(event) => handleClickOpenEvaluate(event.currentTarget.dataset.key, event.currentTarget.dataset.type)}
                                             >
-                                            Test
+                                            Evaluate
                                         </Button>
                                         </TableCell>
                                     </TableRow>
