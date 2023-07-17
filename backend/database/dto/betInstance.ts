@@ -30,3 +30,11 @@ export function getBetInstance(betId: number, userId: number): Promise<BetInstan
         }
     })
 }
+
+export function getBetInstancesByBetId(betId: number): Promise<BetInstance[]> {
+    return prisma.betInstance.findMany({
+        where: {
+            betId: betId
+        }
+    })
+}

@@ -1,6 +1,11 @@
 import express, { Request, Response } from 'express';
 import { createBet, getBet, getBetsForEvent, updateBet } from '../database/dto/bet'
-import { createBetInstance, getBetInstance, updateBetInstance } from "../database/dto/betInstance";
+import {
+    createBetInstance,
+    getBetInstance,
+    getBetInstancesByBetId,
+    updateBetInstance
+} from "../database/dto/betInstance";
 
 export const betInstanceRoute = express.Router()
 
@@ -51,6 +56,22 @@ betInstanceRoute.get('/betInstance/:userId/:betId', async (req:Request, res: Res
         res.json({
             success: false,
             message: "ERROR while fetching betInstance with userId: " + userId + " and betId: " + betId
+        })
+    }
+})
+
+betInstanceRoute.get('/betInstances/:betId', async (req:Request, res: Response): Promise<void> => {
+    const betId = parseInt(req.params.betId, 10)
+
+    try {
+        const betInstances = await getBetInstancesByBetId(betId)
+        res.json({
+            betInstances
+        })
+    } catch (e: any) {
+        res.json({
+            success: false,
+            message: "ERROR while fetching betInstance with userId: "
         })
     }
 })

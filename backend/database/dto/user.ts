@@ -31,3 +31,7 @@ export function getUserByUsername(username: string): Promise<User> {
         }
     })
 }
+
+export function getAllUsers(): Promise<User[]> {
+    return prisma.user.findMany()
+}
