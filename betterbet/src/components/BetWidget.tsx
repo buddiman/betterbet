@@ -97,7 +97,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     useEffect(() => {
         console.log("selected button: " + selectedButton)
-        if(!isLocked) {
+        if(!isLocked && selectedButton !== '') {
             const updateBetInstance = async () => {
                 const response = await api.put('/betInstance', {
                     betId: bet.id,
@@ -137,29 +137,31 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                 const leagueResponse = await api.get(`/league/${bet.leagueId}`)
                 setLeague(leagueResponse.data.league)
 
-                if (league && sportTypes) {
-                    const type = sportTypes.find(e => e.id === league.sportTypeId)
+                if (leagueResponse.data.league && sportTypes) {
+                    const type = sportTypes.find(e => e.id === leagueResponse.data.league.sportTypeId)
                     if (type) {
                         setSportTypeName(type.name)
                     }
                 }
 
                 const response = await api.get(`/betInstance/${currentUser?.id}/${bet.id}`)
-                const betInstance = response.data
+                const responseData = response.data.betInstance
                 setBetInstance(response.data.betInstance)
-                if (response.data.betInstance) {
-                    if (bet.type === 'result' && response.data.betInstance.userBet) {
-                        const result = response.data.betInstance.userBet.split(':')
+                if (responseData) {
+                    const betInstance = responseData.userBet
+                    if (bet.type === 'result' && betInstance) {
+                        const result = betInstance.split(':')
                         console.log(result)
                         setHomeResult(result[0])
                         setAwayResult(result[1])
                     }
-                    if (bet.type !== 'result' && response.data.betInstance.userBet) {
-                        setSelectedButton(response.data.betInstance.userBet)
+                    if (bet.type !== 'result' && betInstance) {
+                        console.log("BUTTON FOUND")
+                        setSelectedButton(betInstance)
                     }
-                    if (bet.type !== 'result' && !response.data.betInstance.userBet) {
-                        setSelectedButton('')
-                    }
+                } else if (bet.type !== 'result') {
+                    console.log("NO BUTTON SAVED!")
+                    setSelectedButton('')
                 }
             }
         };
@@ -196,6 +198,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
             const newIndex = prevIndex + 1;
             return newIndex < bets.length ? newIndex : prevIndex;
         });
+        setSelectedButton('')
     };
 
     const handlePreviousBet = () => {
@@ -204,6 +207,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
             const newIndex = prevIndex - 1;
             return newIndex >= 0 ? newIndex : prevIndex;
         });
+        setSelectedButton('')
     };
 
     const gridItemStyle = {
