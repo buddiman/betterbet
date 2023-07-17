@@ -137,8 +137,8 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                 const leagueResponse = await api.get(`/league/${bet.leagueId}`)
                 setLeague(leagueResponse.data.league)
 
-                if (league && sportTypes) {
-                    const type = sportTypes.find(e => e.id === league.sportTypeId)
+                if (leagueResponse.data.league && sportTypes) {
+                    const type = sportTypes.find(e => e.id === leagueResponse.data.league.sportTypeId)
                     if (type) {
                         setSportTypeName(type.name)
                     }
