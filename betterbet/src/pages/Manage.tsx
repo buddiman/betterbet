@@ -3,8 +3,8 @@ import {
     Box,
     Button,
     ButtonGroup,
-    Grid,
-    Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
+    Grid, MenuItem,
+    Paper, Select, SelectChangeEvent, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
 } from "@mui/material";
 import AddEvent from "../components/AddEvent";
 import AddLeague from "../components/AddLeague";
@@ -12,8 +12,12 @@ import AddBet from "../components/AddBet";
 import { Bet } from "shared/models/bet";
 import api from "../api";
 import Evaluate from "../components/Evaluate";
+import { Event } from "shared/models/event";
 
 export default function Manage() {
+    const [eventList, setEventList] = React.useState<Event[] | undefined>([])
+    const [eventIdValue, setEventIdValue] = React.useState<any>(null)
+    const [managedBets, setManagedBets] = React.useState<Bet[] | undefined>(undefined)
     const [openAddEvent, setOpenAddEvent] = React.useState(false)
     const [openAddLeague, setOpenAddLeague] = React.useState(false)
     const [openAddBet, setOpenAddBet] = React.useState(false)
@@ -21,6 +25,18 @@ export default function Manage() {
     const [unevaluatedBets, setUnevaluatedBets] = React.useState<Bet[]>([])
     const [evaluateType, setEvaluateType] = React.useState('')
     const [evaluateId, setEvaluateId] = React.useState(0)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await api.get("/events")
+                setEventList(response.data.event);
+            } catch (error) {
+                console.error('Error fetching data from API:', error);
+            }
+        };
+        fetchData();
+    }, [])
 
     const handleClickOpenAddEvent = () => {
         setOpenAddEvent(true)
@@ -54,6 +70,20 @@ export default function Manage() {
         }
     }
 
+    const handleClickDeleteBet = async (key: string | undefined) => {
+        if (typeof key === "string" ) {
+            const deleteId = parseInt(key)
+
+            try {
+                await api.delete(`/bet/${deleteId}`)
+                const response = await api.get(`/bets/${eventIdValue}`)
+                setManagedBets(response.data.bets)
+            } catch (e) {
+               console.log(e)
+            }
+        }
+    }
+
     const handleCloseEvaluate = () => {
         setOpenEvaluate(false);
     }
@@ -69,6 +99,24 @@ export default function Manage() {
         };
         fetchData();
     }, [openEvaluate])
+
+    const handleSelectEventChange = async (event: SelectChangeEvent<any>) => {
+        if (eventList) {
+            const selectedEventId = event.target.value as string;
+            const selectedEvent = eventList.find(event => event.id === parseInt(selectedEventId));
+            setEventIdValue(selectedEvent?.id || null);
+            if (selectedEvent) {
+                try {
+                    const response = await api.get(`/bets/${selectedEvent.id}`)
+                    setManagedBets(response.data.bets)
+                } catch (e) {
+                    console.log(e)
+                }
+            }
+        }
+    }
+
+
 
     const gridItemStyle = {
         display: 'flex',
@@ -125,12 +173,13 @@ export default function Manage() {
                                         <TableCell align="center">{e.type}</TableCell>
                                         <TableCell align="center">{e.typeCondition}</TableCell>
                                         <TableCell align="center">{e.question}</TableCell>
-                                        <TableCell align="center"><Button href={e.url || ""} target="_blank">Infos</Button></TableCell>
+                                        <TableCell align="center"><Button href={e.url || ""}
+                                                                          target="_blank">Infos</Button></TableCell>
                                         <TableCell align="center"><Button
                                             data-key={e.id}
                                             data-type={e.type}
                                             onClick={(event) => handleClickOpenEvaluate(event.currentTarget.dataset.key, event.currentTarget.dataset.type)}
-                                            >
+                                        >
                                             Evaluate
                                         </Button>
                                         </TableCell>
@@ -141,7 +190,72 @@ export default function Manage() {
                     </Paper>
                 </Grid>
                 <Grid item xs={6} sm={6} style={gridItemStyle}>
-                    <Paper>Content 2</Paper>
+                    <Paper>
+                        <Typography variant="h6">
+                            Tipp Management
+                        </Typography>
+                        <Select
+                            labelId="select-label"
+                            id="eventSelect"
+                            sx={{width: '200px'}}
+                            value={eventIdValue || ''}
+                            onChange={handleSelectEventChange}
+                        >
+                            {eventList && eventList.map((event) => (
+                                <MenuItem key={event.id} value={event.id}>
+                                    {event.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <TableContainer component={Paper}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="center">Team 1</TableCell>
+                                    <TableCell align="center">Team 2</TableCell>
+                                    <TableCell align="center">Typ</TableCell>
+                                    <TableCell align="center">Kondition</TableCell>
+                                    <TableCell align="center">Frage</TableCell>
+                                    <TableCell align="center">Link</TableCell>
+                                    <TableCell align="center">Bearbeiten</TableCell>
+                                    <TableCell align="center">Löschen</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {managedBets && managedBets.map((e) => (
+                                    <TableRow
+                                        key={e.id}
+                                    >
+                                        <TableCell align="center">{e.teamHomeDescription}</TableCell>
+                                        <TableCell align="center">{e.teamAwayDescription}</TableCell>
+                                        <TableCell align="center">{e.type}</TableCell>
+                                        <TableCell align="center">{e.typeCondition}</TableCell>
+                                        <TableCell align="center">{e.question}</TableCell>
+                                        <TableCell align="center"><Button href={e.url || ""}
+                                                                          target="_blank">Infos</Button></TableCell>
+                                        <TableCell align="center">
+                                            <Button
+                                                disabled={true}
+                                                data-key={e.id}
+                                                data-type={e.type}
+                                                onClick={(event) => handleClickOpenEvaluate(event.currentTarget.dataset.key, event.currentTarget.dataset.type)}
+                                            >
+                                                Bearbeiten
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Button
+                                                color="error"
+                                                data-key={e.id}
+                                                onClick={(event) => handleClickDeleteBet(event.currentTarget.dataset.key)}
+                                            >
+                                                Löschen
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </TableContainer>
+                    </Paper>
                 </Grid>
                 <Grid item xs={6} sm={6} style={gridItemStyle}>
                     <Paper>Content 3</Paper>
