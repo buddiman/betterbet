@@ -412,7 +412,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                 {betType === 'question' && (
                     <Grid item xs={10} style={gridItemStyle}>
                         <Button
-                            data-key="ja"
+                            data-key="Ja"
                             variant={selectedButton === "Ja" ? "contained" : "outlined"}
                             color={selectedButton === "Ja" ? "primary" : "error"}
                             disabled={isLocked === true}
@@ -421,7 +421,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             Ja
                         </Button>
                         <Button
-                            data-key="nein"
+                            data-key="Nein"
                             variant={selectedButton === "Nein" ? "contained" : "outlined"}
                             color={selectedButton === "Nein" ? "primary" : "error"}
                             disabled={isLocked === true}
