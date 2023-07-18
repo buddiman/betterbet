@@ -16,6 +16,14 @@ export async function updateBet(bet: Bet): Promise<Bet> {
     })
 }
 
+export async function deleteBet(id: number): Promise<Bet> {
+    return prisma.bet.delete({
+        where: {
+            id: id,
+        },
+    })
+}
+
 export function getBet(betId: number): Promise<Bet> {
     return prisma.bet.findUnique({
         where: {

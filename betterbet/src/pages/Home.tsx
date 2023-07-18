@@ -35,7 +35,7 @@ const Home: FC<any> = (): ReactElement => {
                 return
             }
             const eventsWithMissingBets = await api.post("/missingBetEvents", {
-                userId: user.userId
+                userId: user.id
             })
             setMissingBetEvents(eventsWithMissingBets.data.events)
 
