@@ -1,5 +1,13 @@
 import express, { Request, Response } from 'express';
-import { createBet, getBet, getBetsForEvent, getNotEvaluatedBetsInThePast, updateBet } from '../database/dto/bet'
+import {
+    createBet,
+    deleteBet,
+    getBet,
+    getBetsForEvent,
+    getNotEvaluatedBetsInThePast,
+    updateBet
+} from '../database/dto/bet'
+import { deleteBetInstancesByBetId } from "../database/dto/betInstance";
 
 export const betRoute = express.Router()
 
@@ -49,6 +57,24 @@ betRoute.get('/bet', async (req:Request, res: Response): Promise<void> => {
         res.json({
             success: false,
             message: "ERROR while fetching a bet with id " + betId
+        })
+    }
+})
+
+betRoute.delete('/bet/:deleteId', async (req:Request, res: Response): Promise<void> => {
+    const deleteId = parseInt(req.params.deleteId, 10)
+    console.log("deleteId: " + deleteId)
+    try {
+        const y = await deleteBetInstancesByBetId(deleteId)
+        const x = await deleteBet(deleteId)
+        res.json({
+            success: true,
+            message: "Deleted bet and betInstances with id " + deleteId
+        })
+    } catch (e: any) {
+        res.json({
+            success: false,
+            message: "ERROR while deleting bet with id " + deleteId
         })
     }
 })

@@ -20,6 +20,14 @@ export async function updateBetInstance(betInstance: BetInstance): Promise<BetIn
     })
 }
 
+export function deleteBetInstancesByBetId(betId: number) {
+    return prisma.betInstance.deleteMany({
+        where: {
+            betId: betId
+        }
+    })
+}
+
 export function getBetInstance(betId: number, userId: number): Promise<BetInstance> {
     return prisma.betInstance.findUnique({
         where: {
