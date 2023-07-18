@@ -65,11 +65,13 @@ manageRoute.post('/missingBetEvents', async (req: Request, res: Response): Promi
     const missingBetEvents = await getEventsWithMissingBetInstances(request.userId)
     const data = []
     for(const missingBetEvent of missingBetEvents) {
-        data.push({
-            eventId: missingBetEvent.id,
-            name: missingBetEvent.name,
-            count: missingBetEvent.Bet.length
-        })
+        if(missingBetEvent.Bet.length > 0) {
+            data.push({
+                eventId: missingBetEvent.id,
+                name: missingBetEvent.name,
+                count: missingBetEvent.Bet.length
+            })
+        }
     }
 
     try {

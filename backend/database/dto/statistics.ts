@@ -22,6 +22,7 @@ export async function getEventsWithMissingBetInstances(userId: number) {
                 where: {
                     BetInstance: {
                         none: {
+                            userId: userId
                         }
                     }
                 }
