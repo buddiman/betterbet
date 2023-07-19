@@ -3,9 +3,11 @@ import {
     Box,
     Button,
     ButtonGroup,
-    Grid, MenuItem,
-    Paper, Select, SelectChangeEvent, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
+    Grid, IconButton, MenuItem,
+    Paper, Select, SelectChangeEvent, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography
 } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import AddEvent from "../components/AddEvent";
 import AddLeague from "../components/AddLeague";
 import AddBet from "../components/AddBet";
@@ -71,7 +73,7 @@ export default function Manage() {
     }
 
     const handleClickDeleteBet = async (key: string | undefined) => {
-        if (typeof key === "string" ) {
+        if (typeof key === "string") {
             const deleteId = parseInt(key)
 
             try {
@@ -79,7 +81,7 @@ export default function Manage() {
                 const response = await api.get(`/bets/${eventIdValue}`)
                 setManagedBets(response.data.bets)
             } catch (e) {
-               console.log(e)
+                console.log(e)
             }
         }
     }
@@ -115,8 +117,6 @@ export default function Manage() {
             }
         }
     }
-
-
 
     const gridItemStyle = {
         display: 'flex',
@@ -207,55 +207,66 @@ export default function Manage() {
                                 </MenuItem>
                             ))}
                         </Select>
-                        <TableContainer component={Paper}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="center">Team 1</TableCell>
-                                    <TableCell align="center">Team 2</TableCell>
-                                    <TableCell align="center">Typ</TableCell>
-                                    <TableCell align="center">Kondition</TableCell>
-                                    <TableCell align="center">Frage</TableCell>
-                                    <TableCell align="center">Link</TableCell>
-                                    <TableCell align="center">Bearbeiten</TableCell>
-                                    <TableCell align="center">Löschen</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {managedBets && managedBets.map((e) => (
-                                    <TableRow
-                                        key={e.id}
-                                    >
-                                        <TableCell align="center">{e.teamHomeDescription}</TableCell>
-                                        <TableCell align="center">{e.teamAwayDescription}</TableCell>
-                                        <TableCell align="center">{e.type}</TableCell>
-                                        <TableCell align="center">{e.typeCondition}</TableCell>
-                                        <TableCell align="center">{e.question}</TableCell>
-                                        <TableCell align="center"><Button href={e.url || ""}
-                                                                          target="_blank">Infos</Button></TableCell>
-                                        <TableCell align="center">
-                                            <Button
-                                                disabled={true}
-                                                data-key={e.id}
-                                                data-type={e.type}
-                                                onClick={(event) => handleClickOpenEvaluate(event.currentTarget.dataset.key, event.currentTarget.dataset.type)}
-                                            >
-                                                Bearbeiten
-                                            </Button>
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            <Button
-                                                color="error"
-                                                data-key={e.id}
-                                                onClick={(event) => handleClickDeleteBet(event.currentTarget.dataset.key)}
-                                            >
-                                                Löschen
-                                            </Button>
-                                        </TableCell>
+                        <div style={{height: "600px", overflow: "auto"}}>
+                            <TableContainer component={Paper}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell align="center">Team 1</TableCell>
+                                        <TableCell align="center">Team 2</TableCell>
+                                        <TableCell align="center">Typ</TableCell>
+                                        <TableCell align="center">Kondition</TableCell>
+                                        <TableCell align="center">Frage</TableCell>
+                                        <TableCell align="center">Link</TableCell>
+                                        <TableCell align="center">Bearbeiten</TableCell>
+                                        <TableCell align="center">Löschen</TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </TableContainer>
+                                </TableHead>
+                                <TableBody>
+                                    {managedBets && managedBets.map((e) => (
+                                        <TableRow
+                                            key={e.id}
+                                        >
+                                            <TableCell align="center">{e.teamHomeDescription}</TableCell>
+                                            <TableCell align="center">{e.teamAwayDescription}</TableCell>
+                                            <TableCell align="center">{e.type}</TableCell>
+                                            <TableCell align="center">{e.typeCondition}</TableCell>
+                                            <TableCell align="center">
+                                                { e.question && (
+                                                <Tooltip title={e.question}>
+                                                    <IconButton>
+                                                        <QuestionMarkIcon/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                                    )}
+                                            </TableCell>
+                                            <TableCell align="center"><Button href={e.url || ""}
+                                                                              target="_blank">Infos</Button></TableCell>
+                                            <TableCell align="center">
+                                                <Button
+                                                    disabled={true}
+                                                    data-key={e.id}
+                                                    data-type={e.type}
+                                                    onClick={(event) => handleClickOpenEvaluate(event.currentTarget.dataset.key, event.currentTarget.dataset.type)}
+                                                >
+                                                    Bearbeiten
+                                                </Button>
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <IconButton
+                                                    color="error"
+                                                    data-key={e.id}
+                                                    onClick={(event) => handleClickDeleteBet(event.currentTarget.dataset.key)}
+                                                >
+                                                    <DeleteIcon/>
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </TableContainer>
+                        </div>
                     </Paper>
+
                 </Grid>
                 <Grid item xs={6} sm={6} style={gridItemStyle}>
                     <Paper>Content 3</Paper>

@@ -3,7 +3,7 @@ import {
     createBet,
     deleteBet,
     getBet,
-    getBetsForEvent, getMissingBetsForEvent,
+    getBetsForEvent, getBetsForEventWithBetInstances, getMissingBetsForEvent,
     getNotEvaluatedBetsInThePast,
     updateBet
 } from '../database/dto/bet'
@@ -122,6 +122,21 @@ betRoute.get('/unevaluatedBets', async (req:Request, res: Response): Promise<voi
         res.json({
             success: false,
             message: "ERROR while fetching not evaluated bets in the past"
+        })
+    }
+})
+
+betRoute.get('/betsWithInstances/:eventId', async (req:Request, res: Response): Promise<void> => {
+    const eventId = parseInt(req.params.eventId, 10)
+    try {
+        const bets = await getBetsForEventWithBetInstances(eventId)
+        res.json({
+            bets
+        })
+    } catch (e: any) {
+        res.json({
+            success: false,
+            message: "ERROR while fetching bets for event with id " + eventId
         })
     }
 })
