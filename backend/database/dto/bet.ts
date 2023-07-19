@@ -43,6 +43,20 @@ export function getBetsForEvent(eventId: number): Promise<Bet[]> {
     })
 }
 
+export function getBetsForEventWithBetInstances(eventId: number) {
+    return prisma.bet.findMany({
+        include: {
+            BetInstance: true,
+        },
+        where: {
+            eventId: eventId
+        },
+        orderBy: {
+            date: "asc"
+        }
+    })
+}
+
 export function getMissingBetsForEvent(eventId: number, userId: number): Promise<Bet[]> {
     return prisma.bet.findMany({
         where: {
