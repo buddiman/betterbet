@@ -17,6 +17,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Bets from "./pages/Bets";
 import Manage from "./pages/Manage";
+import Statistics from "./pages/Statistics"
 
 function App() {
     const [userIsAdmin, setUserIsAdmin] = useState<boolean>(false);
@@ -74,6 +75,11 @@ function App() {
                                                 My Bets
                                             </Typography>
                                         </Link>
+                                        <Link to="/statistics">
+                                            <Typography variant="h5">
+                                                Statistik
+                                            </Typography>
+                                        </Link>
                                         <Link to={"/"} onClick={logOut}>
                                             <Typography variant="h5">
                                                 Logout
@@ -107,6 +113,7 @@ function App() {
                         <Route path="/register" element={<Register/>}/>
                         <Route path="/manage" element={<Manage/>}/>
                         <Route path="/bets" element={<Bets/>}/>
+                        <Route path="/statistics" element={<Statistics/>}/>
                     </Routes>
                 </Box>
             </LocalizationProvider>
