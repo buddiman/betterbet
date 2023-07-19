@@ -36,8 +36,15 @@ function App() {
             setUserIsAdmin(user.isAdmin)
         }
     }, []);
+
+    const containerStyle: React.CSSProperties = {
+        width: '100%',      // Take full available width
+        height: '100vh',    // Take full viewport height
+        overflow: 'hidden' // Hide any overflow content (optional)
+    };
+
     return (
-        <div>
+        <div style={containerStyle}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <CssBaseline/>
                 <AppBar position="static">
