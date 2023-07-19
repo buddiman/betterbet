@@ -223,12 +223,17 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get(`/bets/${eventId}`)
-                if (response.data.bets.length === 0) {
-                    setBets([dummyBet])
-                    console.log("EMPTY")
+                if (showMissing) {
+                    const result = await api.get(`/missingBets/${eventId}/${currentUser?.id}`)
+                    setBets(result.data.bets)
                 } else {
-                    setBets(response.data.bets)
+                    const response = await api.get(`/bets/${eventId}`)
+                    if (response.data.bets.length === 0) {
+                        setBets([dummyBet])
+                        console.log("EMPTY")
+                    } else {
+                        setBets(response.data.bets)
+                    }
                 }
                 const responseSportTypes = await api.get('/sporttypes')
                 setSportTypes(responseSportTypes.data.sportTypes)
