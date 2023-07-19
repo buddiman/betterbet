@@ -58,7 +58,7 @@ function App() {
                             <Stack direction="row" spacing={2}>
                                 <Link to="/">
                                     <Typography variant="h5">
-                                        Home
+                                        Dashboard
                                     </Typography>
                                 </Link>
                                 {userIsAdmin && (
@@ -72,7 +72,7 @@ function App() {
                                     <Stack direction="row" spacing={2}>
                                         <Link to="/bets">
                                             <Typography variant="h5">
-                                                My Bets
+                                                Meine Tipps
                                             </Typography>
                                         </Link>
                                         <Link to="/statistics">
