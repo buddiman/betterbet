@@ -24,6 +24,9 @@ export async function getEventsWithMissingBetInstances(userId: number) {
                         none: {
                             userId: userId
                         }
+                    },
+                    date: {
+                        gt: new Date()
                     }
                 }
             },

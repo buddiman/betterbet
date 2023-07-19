@@ -1,5 +1,18 @@
 import React, { FC, ReactElement, useEffect, useState } from "react";
-import { Grid, Button, Avatar, Typography, Link, TextField, Stack, Fab, Box, Paper } from "@mui/material";
+import {
+    Grid,
+    Button,
+    Avatar,
+    Typography,
+    Link,
+    TextField,
+    Stack,
+    Fab,
+    Box,
+    Paper,
+    Switch,
+    FormControl, FormLabel, FormControlLabel, FormGroup
+} from "@mui/material";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -55,6 +68,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     const [homeResult, setHomeResult] = useState('-')
     const [awayResult, setAwayResult] = useState('-')
     const [isLocked, setIsLocked] = useState(false)
+    const [showMissing, setShowMissing] = useState(false);
 
     const handleBetButton = (key: string | undefined) => {
         if (typeof key === "string") {
@@ -63,8 +77,12 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
         }
     };
 
+    const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setShowMissing(event.target.checked);
+    };
+
     const borderColor = () => {
-        if(betInstance) {
+        if (betInstance) {
             if (betInstance.points < 0) {
                 return 'grey';
             } else if (betInstance.points === 0) {
@@ -82,7 +100,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     }
 
     useEffect(() => {
-        if(!isLocked) {
+        if (!isLocked) {
             const updateBetInstance = async () => {
                 const response = await api.put('/betInstance', {
                     betId: bet.id,
@@ -106,7 +124,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     useEffect(() => {
         console.log("selected button: " + selectedButton)
-        if(!isLocked && selectedButton !== '') {
+        if (!isLocked && selectedButton !== '') {
             const updateBetInstance = async () => {
                 const response = await api.put('/betInstance', {
                     betId: bet.id,
@@ -120,6 +138,29 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
             }
         }
     }, [selectedButton])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (showMissing) {
+                    const result = await api.get(`/missingBets/${eventId}/${currentUser?.id}`)
+                    setBets(result.data.bets)
+                } else {
+                    const response = await api.get(`/bets/${eventId}`)
+                    if (response.data.bets.length === 0) {
+                        setBets([dummyBet])
+                        console.log("EMPTY")
+                    } else {
+                        setBets(response.data.bets)
+                    }
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        fetchData()
+        setBetIndex(0)
+    }, [showMissing])
 
     useEffect(() => {
         setBet({...bets[0]})
@@ -182,12 +223,17 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get(`/bets/${eventId}`)
-                if (response.data.bets.length === 0) {
-                    setBets([dummyBet])
-                    console.log("EMPTY")
+                if (showMissing) {
+                    const result = await api.get(`/missingBets/${eventId}/${currentUser?.id}`)
+                    setBets(result.data.bets)
                 } else {
-                    setBets(response.data.bets)
+                    const response = await api.get(`/bets/${eventId}`)
+                    if (response.data.bets.length === 0) {
+                        setBets([dummyBet])
+                        console.log("EMPTY")
+                    } else {
+                        setBets(response.data.bets)
+                    }
                 }
                 const responseSportTypes = await api.get('/sporttypes')
                 setSportTypes(responseSportTypes.data.sportTypes)
@@ -244,7 +290,22 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
         >
             <Grid container spacing={0} justifyContent="center" alignItems="center"
                   style={{width: '100%', height: '100%'}}>
-                <Grid item xs={1}/>
+                <Grid item xs={1}>
+                    <FormControl component="fieldset">
+                        <FormGroup aria-label="position" row>
+                            <FormControlLabel
+                                value="bottom"
+                                control={<Switch color="primary" checked={showMissing} onChange={handleSwitchChange} />}
+                                label={
+                                    <span style={{display: 'block', textAlign: 'center'}}>
+                                        Nur fehlende anzeigen
+                                    </span>
+                                }
+                                labelPlacement="bottom"
+                            />
+                        </FormGroup>
+                    </FormControl>
+                </Grid>
                 <Grid item xs={3} style={gridItemStyle}>
                     <Paper variant="outlined">
                         {bet.teamHomeUrl && (
