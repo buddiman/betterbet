@@ -17,6 +17,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Bets from "./pages/Bets";
 import Manage from "./pages/Manage";
+import Statistics from "./pages/Statistics"
 
 function App() {
     const [userIsAdmin, setUserIsAdmin] = useState<boolean>(false);
@@ -36,8 +37,15 @@ function App() {
             setUserIsAdmin(user.isAdmin)
         }
     }, []);
+
+    const containerStyle: React.CSSProperties = {
+        width: '100%',      // Take full available width
+        height: '100vh',    // Take full viewport height
+        overflow: 'hidden' // Hide any overflow content (optional)
+    };
+
     return (
-        <div>
+        <div style={containerStyle}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <CssBaseline/>
                 <AppBar position="static">
@@ -50,7 +58,7 @@ function App() {
                             <Stack direction="row" spacing={2}>
                                 <Link to="/">
                                     <Typography variant="h5">
-                                        Home
+                                        Dashboard
                                     </Typography>
                                 </Link>
                                 {userIsAdmin && (
@@ -64,7 +72,12 @@ function App() {
                                     <Stack direction="row" spacing={2}>
                                         <Link to="/bets">
                                             <Typography variant="h5">
-                                                My Bets
+                                                Meine Tipps
+                                            </Typography>
+                                        </Link>
+                                        <Link to="/statistics">
+                                            <Typography variant="h5">
+                                                Statistik
                                             </Typography>
                                         </Link>
                                         <Link to={"/"} onClick={logOut}>
@@ -100,6 +113,7 @@ function App() {
                         <Route path="/register" element={<Register/>}/>
                         <Route path="/manage" element={<Manage/>}/>
                         <Route path="/bets" element={<Bets/>}/>
+                        <Route path="/statistics" element={<Statistics/>}/>
                     </Routes>
                 </Box>
             </LocalizationProvider>

@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
-import { createUser, getUserById, getUserByUsername, updateUser } from '../database/dto/user'
+import { createUser, getAllUsernamesAndIds, getUserById, getUserByUsername, updateUser } from '../database/dto/user'
 import { hash, compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { getBet } from "../database/dto/bet";
+import { betRoute } from "./betRoute";
 
 export const authRoute = express.Router()
 
@@ -59,4 +61,17 @@ authRoute.post('/auth/login', async (req: Request, res: Response): Promise<void>
     }
 })
 
+betRoute.get('/users', async (req:Request, res: Response): Promise<void> => {
+    try {
+        const users = await getAllUsernamesAndIds()
+        res.json({
+            users
+        })
+    } catch (e: any) {
+        res.json({
+            success: false,
+            message: "ERROR while fetching all users including their ids"
+        })
+    }
+})
 
