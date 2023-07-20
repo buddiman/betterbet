@@ -1,17 +1,19 @@
 import React, { ReactElement, FC, useEffect, useState } from "react";
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import {
-    Box,
+    Box, Button,
     Grid,
-    Paper,
+    Paper, Snackbar,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow,
+    TableRow, TextField,
     Typography
 } from "@mui/material";
 import api from "../api";
 import * as AuthService from "../services/auth.service";
+import { login } from "../services/auth.service";
 
 interface UserPoints {
     username: string
@@ -27,6 +29,9 @@ interface MissingBetEvent {
 const Home: FC<any> = (): ReactElement => {
     const [userPoints, setUserPoints] = useState<UserPoints[] | undefined>(undefined)
     const [missingBetEvents, setMissingBetEvents] = useState<MissingBetEvent[] | undefined>(undefined)
+    const [newPassword, setNewPassword] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
+    const [passwordSnackbarOpen, setPasswordSnackbarOpen] = React.useState(false);
 
     useEffect(() => {
         const fetchMissingBets = async () => {
@@ -52,6 +57,33 @@ const Home: FC<any> = (): ReactElement => {
         fetchData();
         fetchMissingBets()
     }, [])
+
+    const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        try {
+            const response = await api.post('/auth/changePassword', {
+                id: AuthService.getCurrentUser().id,
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            })
+            setPasswordSnackbarOpen(true)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handlePasswordSnackbarClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setPasswordSnackbarOpen(false);
+    };
+
+    const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
+        <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+    ));
 
     const gridItemStyle = {
         display: 'flex',
@@ -122,8 +154,29 @@ const Home: FC<any> = (): ReactElement => {
                 <Grid item xs={6} sm={6} style={gridItemStyle}>
                     <Paper>
                         <Typography variant="h6" align="center">
-                            Coming Soon
+                            Passwort ändern
                         </Typography>
+                        <form onSubmit={handleChangePassword}>
+                            <TextField
+                                label="Altes Passwort"
+                                type="password"
+                                value={oldPassword}
+                                onChange={(e) => setOldPassword(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                variant="outlined"/>
+                            <TextField
+                                label="Neues Passwort"
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                variant="outlined"/>
+                            <Button type="submit" variant="contained" color="primary">
+                                Passwort ändern
+                            </Button>
+                        </form>
                     </Paper>
                 </Grid>
                 <Grid item xs={6} sm={6} style={gridItemStyle}>
@@ -134,6 +187,15 @@ const Home: FC<any> = (): ReactElement => {
                     </Paper>
                 </Grid>
             </Grid>
+            <Snackbar
+                open={passwordSnackbarOpen}
+                autoHideDuration={6000}
+                onClose={handlePasswordSnackbarClose}
+            >
+                <Alert onClose={handlePasswordSnackbarClose} severity="success">
+                    Passwort erfolgreich geändert
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };
