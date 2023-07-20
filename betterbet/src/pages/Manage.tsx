@@ -1,10 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Button,
     ButtonGroup,
-    Grid, IconButton, MenuItem,
-    Paper, Select, SelectChangeEvent, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography
+    Grid,
+    IconButton,
+    MenuItem,
+    Paper,
+    Select,
+    SelectChangeEvent,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Tooltip,
+    Typography
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
@@ -15,6 +27,7 @@ import { Bet } from "shared/models/bet";
 import api from "../api";
 import Evaluate from "../components/Evaluate";
 import { Event } from "shared/models/event";
+import * as AuthService from "../services/auth.service";
 
 export default function Manage() {
     const [eventList, setEventList] = React.useState<Event[] | undefined>([])
@@ -27,6 +40,8 @@ export default function Manage() {
     const [unevaluatedBets, setUnevaluatedBets] = React.useState<Bet[]>([])
     const [evaluateType, setEvaluateType] = React.useState('')
     const [evaluateId, setEvaluateId] = React.useState(0)
+    const [newPassword, setNewPassword] = useState('');
+    const [enteredUserId, setEnteredUserId] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -88,6 +103,19 @@ export default function Manage() {
 
     const handleCloseEvaluate = () => {
         setOpenEvaluate(false);
+    }
+
+    const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        try {
+            const response = await api.post('/auth/resetPassword', {
+                id: parseInt(enteredUserId, 10),
+                newPassword: newPassword
+            })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {
@@ -207,7 +235,7 @@ export default function Manage() {
                                 </MenuItem>
                             ))}
                         </Select>
-                        <div style={{height: "600px", overflow: "auto"}}>
+                        <div style={{height: "450px", overflow: "auto"}}>
                             <TableContainer component={Paper}>
                                 <TableHead>
                                     <TableRow>
@@ -269,7 +297,32 @@ export default function Manage() {
 
                 </Grid>
                 <Grid item xs={6} sm={6} style={gridItemStyle}>
-                    <Paper>Content 3</Paper>
+                    <Paper>
+                        <Typography variant="h6">
+                            Nutzer Passwort ändern (ADMIN)
+                        </Typography>
+                        <form onSubmit={handleChangePassword}>
+                            <TextField
+                                label="Nutzer ID"
+                                type="number"
+                                value={enteredUserId}
+                                onChange={(e) => setEnteredUserId(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                variant="outlined"/>
+                            <TextField
+                                label="Neues Passwort"
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                variant="outlined"/>
+                            <Button type="submit" variant="contained" color="primary">
+                                Passwort ändern
+                            </Button>
+                        </form>
+                    </Paper>
                 </Grid>
                 <Grid item xs={6} sm={6} style={gridItemStyle}>
                     <Paper>Content 4</Paper>
