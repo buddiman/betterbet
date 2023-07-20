@@ -16,6 +16,17 @@ export async function updateUser(user: User): Promise<User> {
     })
 }
 
+export async function changeUserPasswordHash(userId: number, hash: string): Promise<User> {
+    return prisma.user.update({
+        where: {
+            id: userId
+        },
+        data: {
+            password: hash
+        }
+    })
+}
+
 export function getUserById(userId: number): Promise<User> {
     return prisma.user.findUnique({
         where: {

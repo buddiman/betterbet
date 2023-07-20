@@ -1,5 +1,12 @@
 import express, { Request, Response } from 'express';
-import { createUser, getAllUsernamesAndIds, getUserById, getUserByUsername, updateUser } from '../database/dto/user'
+import {
+    changeUserPasswordHash,
+    createUser,
+    getAllUsernamesAndIds,
+    getUserById,
+    getUserByUsername,
+    updateUser
+} from '../database/dto/user'
 import { hash, compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { getBet } from "../database/dto/bet";
@@ -25,6 +32,54 @@ authRoute.post('/auth/register', async (req: Request, res: Response): Promise<vo
         res.json({
             success: false,
             message: "ERROR while inserting a user\n" + user
+        })
+    }
+})
+
+authRoute.post('/auth/changePassword', async (req: Request, res: Response): Promise<void> => {
+    const request = req.body
+
+    try {
+        const existingUser = await getUserById(request.id)
+
+        if(await compare(request.oldPassword, existingUser.password) === false) {
+            res.json({
+                success: false,
+                message: "Password hashs differ! abort"
+            })
+            return
+        }
+
+        request.newPassword = await hash(request.newPassword, saltRounds)
+        const result = await changeUserPasswordHash(request.id, request.newPassword)
+
+        res.json({
+            success: true,
+            message: 'password updated for ' + existingUser.username
+        })
+    } catch (e: any) {
+        res.json({
+            success: false,
+            message: "ERROR while updating password"
+        })
+    }
+})
+
+authRoute.post('/auth/resetPassword', async (req: Request, res: Response): Promise<void> => {
+    const request = req.body
+
+    try {
+        request.newPassword = await hash(request.newPassword, saltRounds)
+        const result = await changeUserPasswordHash(request.id, request.newPassword)
+
+        res.json({
+            success: true,
+            message: 'password updated for ' + request.id
+        })
+    } catch (e: any) {
+        res.json({
+            success: false,
+            message: "ERROR while updating password"
         })
     }
 })
