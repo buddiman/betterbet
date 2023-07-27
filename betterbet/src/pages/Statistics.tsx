@@ -7,6 +7,7 @@ import {
     MenuItem,
     Paper,
     Select,
+    Table,
     SelectChangeEvent, TableBody, TableCell, TableContainer,
     TableHead,
     TableRow, Tooltip
@@ -33,8 +34,8 @@ const Statistics: FC = (): ReactElement => {
     const [eventIdValue, setEventIdValue] = React.useState<any>(null)
     const [displayedBets, setDisplayedBets] = React.useState<BetWithInstances[] | undefined>(undefined)
 
-    const backgroundColor = (points: number|undefined) => {
-        if(points === undefined) {
+    const backgroundColor = (points: number | undefined) => {
+        if (points === undefined) {
             return 'red'
         } else {
             if (points < 0) {
@@ -122,48 +123,50 @@ const Statistics: FC = (): ReactElement => {
                     </Select>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                    <TableContainer component={Paper}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center">Team 1</TableCell>
-                                <TableCell align="center">Team 2</TableCell>
-                                <TableCell align="center">Typ</TableCell>
-                                <TableCell align="center">Kondition</TableCell>
-                                <TableCell align="center">Frage</TableCell>
-                                {userList && userList.map((e) => (
-                                    <TableCell align="center">{e.username}</TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {displayedBets && displayedBets.map((e) => (
-                                <TableRow
-                                    key={e.id}
-                                >
-                                    <TableCell align="center">{e.teamHomeDescription}</TableCell>
-                                    <TableCell align="center">{e.teamAwayDescription}</TableCell>
-                                    <TableCell align="center">{e.type}</TableCell>
-                                    <TableCell align="center">{e.typeCondition}</TableCell>
-                                    <TableCell align="center">
-                                        {e.question && (
-                                            <Tooltip title={e.question}>
-                                                <IconButton>
-                                                    <QuestionMarkIcon/>
-                                                </IconButton>
-                                            </Tooltip>
-                                        )}
-                                    </TableCell>
-                                    {userList && userList.map((u) => (
-                                        <TableCell
-                                            align="center"
-                                            sx={{ backgroundColor:backgroundColor((e.BetInstance.find((b) => b.userId === u.id)?.points))}}
-                                        >
-                                            {(e.BetInstance.find((b) => b.userId === u.id))?.userBet || "---"}
-                                        </TableCell>
+                    <TableContainer component={Paper} style={{maxHeight: 600}}>
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="center">Team 1</TableCell>
+                                    <TableCell align="center">Team 2</TableCell>
+                                    <TableCell align="center">Typ</TableCell>
+                                    <TableCell align="center">Kondition</TableCell>
+                                    <TableCell align="center">Frage</TableCell>
+                                    {userList && userList.map((e) => (
+                                        <TableCell align="center">{e.username}</TableCell>
                                     ))}
                                 </TableRow>
-                            ))}
-                        </TableBody>
+                            </TableHead>
+                            <TableBody style={{ overflowY: 'auto' }}>
+                                {displayedBets && displayedBets.map((e) => (
+                                    <TableRow
+                                        key={e.id}
+                                    >
+                                        <TableCell align="center">{e.teamHomeDescription}</TableCell>
+                                        <TableCell align="center">{e.teamAwayDescription}</TableCell>
+                                        <TableCell align="center">{e.type}</TableCell>
+                                        <TableCell align="center">{e.typeCondition}</TableCell>
+                                        <TableCell align="center">
+                                            {e.question && (
+                                                <Tooltip title={e.question}>
+                                                    <IconButton>
+                                                        <QuestionMarkIcon/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                            )}
+                                        </TableCell>
+                                        {userList && userList.map((u) => (
+                                            <TableCell
+                                                align="center"
+                                                sx={{backgroundColor: backgroundColor((e.BetInstance.find((b) => b.userId === u.id)?.points))}}
+                                            >
+                                                {(e.BetInstance.find((b) => b.userId === u.id))?.userBet || "---"}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
                     </TableContainer>
                 </Grid>
             </Grid>
