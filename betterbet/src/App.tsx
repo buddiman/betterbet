@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
-    AppBar,
-    Box,
+    AppBar, BottomNavigation, BottomNavigationAction,
+    Box, Button,
     CssBaseline,
     Stack,
     Toolbar,
@@ -22,6 +22,10 @@ import Statistics from "./pages/Statistics"
 function App() {
     const [userIsAdmin, setUserIsAdmin] = useState<boolean>(false);
     const [currentUser, setCurrentUser] = useState<IUser | undefined>(undefined);
+
+    const isMobile = window.matchMedia('(max-width: 767px)').matches
+
+    const [bottomNavValue, setBottomNavValue] = React.useState(0);
 
     const logOut = () => {
         AuthService.logout();
@@ -48,64 +52,84 @@ function App() {
         <div style={containerStyle}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <CssBaseline/>
-                <AppBar position="static">
-                    <CssBaseline/>
-                    <Toolbar>
-                        <Stack direction="row" spacing={2}>
-                            <Typography variant="h4">
-                                Tippspiel
-                            </Typography>
+                {isMobile ? (
+                    <BottomNavigation
+                        showLabels
+                        value={bottomNavValue}
+                        onChange={(event, newValue) => {
+                            setBottomNavValue(newValue);
+                        }}
+                    >
+                        <BottomNavigationAction href="/" label="Dashboard"/>
+                        {currentUser ? (
+                                [<BottomNavigationAction href="/bets" label="Meine Tipps"/>,
+                                <BottomNavigationAction href="/statistics" label="Statistik"/>,
+                                <BottomNavigationAction href="/" label="Logout" onClick={logOut}/>]
+                        ) : (
+                               [<BottomNavigationAction href="/login" label="Login"/>,
+                                <BottomNavigationAction href="/register" label="Registrieren"/>]
+                        )}
+                    </BottomNavigation>
+                ) : (
+                    <AppBar position="static">
+                        <CssBaseline/>
+                        <Toolbar>
                             <Stack direction="row" spacing={2}>
-                                <Link to="/">
-                                    <Typography variant="h5">
-                                        Dashboard
-                                    </Typography>
-                                </Link>
-                                {userIsAdmin && (
-                                    <Link to={"/manage"}>
+                                <Typography variant="h4">
+                                    Tippspiel
+                                </Typography>
+                                <Stack direction="row" spacing={2}>
+                                    <Link to="/">
                                         <Typography variant="h5">
-                                            Manage
+                                            Dashboard
                                         </Typography>
                                     </Link>
-                                )}
-                                {currentUser ? (
-                                    <Stack direction="row" spacing={2}>
-                                        <Link to="/bets">
+                                    {userIsAdmin && (
+                                        <Link to={"/manage"}>
                                             <Typography variant="h5">
-                                                Meine Tipps
+                                                Manage
                                             </Typography>
                                         </Link>
-                                        <Link to="/statistics">
-                                            <Typography variant="h5">
-                                                Statistik
-                                            </Typography>
-                                        </Link>
-                                        <Link to={"/"} onClick={logOut}>
-                                            <Typography variant="h5">
-                                                Logout
-                                            </Typography>
-                                        </Link>
-                                    </Stack>
-                                ) : (
-                                    <Stack direction="row" spacing={2}>
-                                        <Link to="/login">
-                                            <Typography variant="h5">
-                                                Login
-                                            </Typography>
-                                        </Link>
-                                        <Link to="/register">
-                                            <Typography variant="h5">
-                                                Register
-                                            </Typography>
-                                        </Link>
-                                    </Stack>
-                                )
-                                }
+                                    )}
+                                    {currentUser ? (
+                                        <Stack direction="row" spacing={2}>
+                                            <Link to="/bets">
+                                                <Typography variant="h5">
+                                                    Meine Tipps
+                                                </Typography>
+                                            </Link>
+                                            <Link to="/statistics">
+                                                <Typography variant="h5">
+                                                    Statistik
+                                                </Typography>
+                                            </Link>
+                                            <Link to={"/"} onClick={logOut}>
+                                                <Typography variant="h5">
+                                                    Logout
+                                                </Typography>
+                                            </Link>
+                                        </Stack>
+                                    ) : (
+                                        <Stack direction="row" spacing={2}>
+                                            <Link to="/login">
+                                                <Typography variant="h5">
+                                                    Login
+                                                </Typography>
+                                            </Link>
+                                            <Link to="/register">
+                                                <Typography variant="h5">
+                                                    Register
+                                                </Typography>
+                                            </Link>
+                                        </Stack>
+                                    )
+                                    }
 
+                                </Stack>
                             </Stack>
-                        </Stack>
-                    </Toolbar>
-                </AppBar>
+                        </Toolbar>
+                    </AppBar>
+                )}
                 <Box>
                     <Routes>
                         <Route path="/" element={<Home/>}/>
