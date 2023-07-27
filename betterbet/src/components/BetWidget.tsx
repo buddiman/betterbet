@@ -70,6 +70,8 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     const [isLocked, setIsLocked] = useState(false)
     const [showMissing, setShowMissing] = useState(false);
 
+    const isMobile = window.matchMedia('(max-width: 767px)').matches
+
     const handleBetButton = (key: string | undefined) => {
         if (typeof key === "string") {
             console.log(key)
@@ -274,289 +276,564 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
         padding: 1,
     };
 
+    const gridItemStyleMobile = {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 1,
+    };
+
+
     return (
-        <Box
-            sx={{
-                width: 950,
-                height: 543,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundImage: 'url(assets/bg-soccer-large.jpg)',
-                backgroundSize: '100% 100%',
-                backgroundColor: 'primary.dark',
-                border: `6px solid ${borderColor()}`,
-                borderRadius: '4px',
-            }}
-        >
-            <Grid container spacing={0} justifyContent="center" alignItems="center"
-                  style={{width: '100%', height: '100%'}}>
-                <Grid item xs={1}>
-                    <FormControl component="fieldset">
-                        <FormGroup aria-label="position" row>
-                            <FormControlLabel
-                                value="bottom"
-                                control={<Switch color="primary" checked={showMissing} onChange={handleSwitchChange} />}
-                                label={
-                                    <span style={{display: 'block', textAlign: 'center'}}>
+        <div>
+            {
+                isMobile ? (
+                    <Box
+                        sx={{
+                            width: 350,
+                            height: 800,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundImage: 'url(assets/bg-soccer-large.jpg)',
+                            backgroundSize: '100% 100%',
+                            backgroundColor: 'primary.dark',
+                            border: `6px solid ${borderColor()}`,
+                            borderRadius: '4px',
+                        }}
+                    >
+                        <Grid container spacing={0} justifyContent="center" alignItems="center"
+                              style={{width: '100%', height: 'auto'}}>
+                            <Grid item xs={4} style={{...gridItemStyle, height: 150}}>
+                                <Paper variant="outlined">
+                                    {bet.teamHomeUrl && (
+                                        <Avatar
+                                            alt="Away Team"
+                                            src={bet.teamHomeUrl}
+                                            sx={{width: 100, height: 100}}
+                                            variant="square"
+                                        />
+                                    )}
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={4} style={gridItemStyle}>
+                                <Typography variant="h3" gutterBottom>
+                                    {bet.result || "-:-"}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={4} style={gridItemStyle}>
+                                <Paper variant="outlined">
+                                    {bet.teamAwayUrl && (
+                                        <Avatar
+                                            alt="Away Team"
+                                            src={bet.teamAwayUrl}
+                                            sx={{width: 100, height: 100}}
+                                            variant="square"
+                                        />
+                                    )}
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={4} style={{...gridItemStyle, height: 100}}>
+                                <Paper variant="outlined">
+                                    <Typography variant="body2" gutterBottom>
+                                        {bet.teamHomeDescription}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={4} style={gridItemStyle}/>
+                            <Grid item xs={4} style={gridItemStyle}>
+                                <Paper variant="outlined">
+                                    <Typography variant="body2" gutterBottom>
+                                        {bet.teamAwayDescription}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={1}/>
+                            <Grid item xs={10} style={{...gridItemStyle, height: 120}}>
+                                <Paper variant="outlined">
+                                    <Typography variant="caption" style={{wordWrap: 'break-word', overflowWrap: 'break-word'}}>
+                                        {betTypes.find((e) => e.key === bet.type)?.sentence ?? ""}{bet.typeCondition}{bet.question}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={1}/>
+                            <Grid item xs={1} style={{...gridItemStyle, height: 100}}/>
+                            {betType === '1X2' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Button
+                                        data-key="1"
+                                        variant={selectedButton === "1" ? "contained" : "outlined"}
+                                        color={selectedButton === "1" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        1
+                                    </Button>
+                                    <Button
+                                        data-key="X"
+                                        variant={selectedButton === "X" ? "contained" : "outlined"}
+                                        color={selectedButton === "X" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        X
+                                    </Button>
+                                    <Button
+                                        data-key="2"
+                                        variant={selectedButton === "2" ? "contained" : "outlined"}
+                                        color={selectedButton === "2" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        2
+                                    </Button>
+                                </Grid>
+                            )}
+                            {betType === 'winner' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Button
+                                        data-key="1"
+                                        variant={selectedButton === "1" ? "contained" : "outlined"}
+                                        color={selectedButton === "1" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        1
+                                    </Button>
+                                    <Button
+                                        data-key="2"
+                                        variant={selectedButton === "2" ? "contained" : "outlined"}
+                                        color={selectedButton === "2" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        2
+                                    </Button>
+                                </Grid>
+                            )}
+                            {betType === 'overunder' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Button
+                                        data-key="Über"
+                                        variant={selectedButton === "Über" ? "contained" : "outlined"}
+                                        color={selectedButton === "Über" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        Über
+                                    </Button>
+                                    <Button
+                                        data-key="Unter"
+                                        variant={selectedButton === "Unter" ? "contained" : "outlined"}
+                                        color={selectedButton === "Unter" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        Unter
+                                    </Button>
+                                </Grid>
+                            )}
+                            {betType === 'question' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Button
+                                        data-key="Ja"
+                                        variant={selectedButton === "Ja" ? "contained" : "outlined"}
+                                        color={selectedButton === "Ja" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        Ja
+                                    </Button>
+                                    <Button
+                                        data-key="Nein"
+                                        variant={selectedButton === "Nein" ? "contained" : "outlined"}
+                                        color={selectedButton === "Nein" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        Nein
+                                    </Button>
+                                </Grid>
+                            )}
+                            {betType === '1or2' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Button
+                                        data-key="1"
+                                        variant={selectedButton === "1" ? "contained" : "outlined"}
+                                        color={selectedButton === "1" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        1
+                                    </Button>
+                                    <Button
+                                        data-key="2"
+                                        variant={selectedButton === "2" ? "contained" : "outlined"}
+                                        color={selectedButton === "2" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        2
+                                    </Button>
+                                </Grid>
+                            )}
+                            {betType === 'result' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <TextField
+                                        value={homeResult}
+                                        onChange={(e) => setHomeResult(e.target.value)}
+                                        autoFocus
+                                        type="number"
+                                        margin="dense"
+                                        id="textFieldHomeResult"
+                                        label="Heimteam"
+                                        fullWidth
+                                        variant="standard"
+                                        disabled={isLocked === true}
+                                    />
+                                    :
+                                    <TextField
+                                        value={awayResult}
+                                        onChange={(e) => setAwayResult(e.target.value)}
+                                        autoFocus
+                                        type="number"
+                                        margin="dense"
+                                        id="textFieldAwayResult"
+                                        label="Auswärtsteam"
+                                        fullWidth
+                                        variant="standard"
+                                        disabled={isLocked === true}
+                                    />
+                                </Grid>
+                            )}
+                            <Grid item xs={1}/>
+                            <Grid item xs={2}>
+                                <Fab color='primary' aria-label='previous-bet' onClick={handlePreviousBet}>
+                                    <ArrowBackIosIcon/>
+                                </Fab>
+                            </Grid>
+                            <Grid item xs={8} style={gridItemStyle}>
+                                <Paper variant="outlined">
+                                    <Stack spacing={1}>
+                                        {league && (
+                                            <Typography variant="body2" gutterBottom>
+                                                <ReactCountryFlag
+                                                    countryCode={league.countryCode}
+                                                    className="emojiFlag" style={{
+                                                    fontSize: '2em',
+                                                    lineHeight: '2em',
+                                                }}
+                                                /> - {sportTypeName} - {league.name}
+                                            </Typography>
+
+                                        )}
+                                        {bet.url && (
+                                            <Button variant='outlined' href={bet.url} target="_blank">
+                                                <OpenInNewIcon/> Infos
+                                            </Button>
+
+                                        )}
+                                        <Typography variant="body1" gutterBottom style={{textAlign: "center"}}>
+                                            {bet.date && (
+                                                new Date(bet.date).toLocaleString('de-DE'))}
+                                        </Typography>
+                                    </Stack>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={2}>
+                                <Fab color='primary' aria-label='next-bet' onClick={handleNextBet}>
+                                    <ArrowForwardIosIcon/>
+                                </Fab>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                ) : (
+                    <Box
+                        sx={{
+                            width: 950,
+                            height: 543,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundImage: 'url(assets/bg-soccer-large.jpg)',
+                            backgroundSize: '100% 100%',
+                            backgroundColor: 'primary.dark',
+                            border: `6px solid ${borderColor()}`,
+                            borderRadius: '4px',
+                        }}
+                    >
+
+                        <Grid container spacing={0} justifyContent="center" alignItems="center"
+                              style={{width: '100%', height: '100%'}}>
+                            <Grid item xs={1}>
+                                <FormControl component="fieldset">
+                                    <FormGroup aria-label="position" row>
+                                        <FormControlLabel
+                                            value="bottom"
+                                            control={<Switch color="primary" checked={showMissing}
+                                                             onChange={handleSwitchChange}/>}
+                                            label={
+                                                <span style={{display: 'block', textAlign: 'center'}}>
                                         Nur fehlende anzeigen
                                     </span>
-                                }
-                                labelPlacement="bottom"
-                            />
-                        </FormGroup>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={3} style={gridItemStyle}>
-                    <Paper variant="outlined">
-                        {bet.teamHomeUrl && (
-                            <Avatar
-                                alt="Away Team"
-                                src={bet.teamHomeUrl}
-                                sx={{width: 120, height: 120}}
-                                variant="square"
-                            />
-                        )}
-                    </Paper>
-                </Grid>
-                <Grid item xs={4} style={gridItemStyle}>
-                    <Typography variant="h2" gutterBottom>
-                        {bet.result || "-:-"}
-                    </Typography>
-                </Grid>
-                <Grid item xs={3} style={gridItemStyle}>
-                    <Paper variant="outlined">
-                        {bet.teamAwayUrl && (
-                            <Avatar
-                                alt="Away Team"
-                                src={bet.teamAwayUrl}
-                                sx={{width: 120, height: 120}}
-                                variant="square"
-                            />
-                        )}
-                    </Paper>
-                </Grid>
-                <Grid item xs={1}>
-                </Grid>
-
-                {/*row end*/}
-                <Grid item xs={1}>
-                    <Fab color='primary' aria-label='previous-bet' onClick={handlePreviousBet}>
-                        <ArrowBackIosIcon/>
-                    </Fab>
-                </Grid>
-                <Grid item xs={3} style={gridItemStyle}>
-                    <Paper variant="outlined">
-                        <Typography variant="h5" gutterBottom>
-                            {bet.teamHomeDescription}
-                        </Typography>
-                    </Paper>
-                </Grid>
-                <Grid item xs={4} style={gridItemStyle}>
-                    <Paper variant="outlined">
-                        <Stack spacing={1}>
-                            {league && (
-                                <Typography variant="body2" gutterBottom>
-                                    <ReactCountryFlag
-                                        countryCode={league.countryCode}
-                                        className="emojiFlag" style={{
-                                        fontSize: '2em',
-                                        lineHeight: '2em',
-                                    }}
-                                    /> - {sportTypeName} - {league.name}
+                                            }
+                                            labelPlacement="bottom"
+                                        />
+                                    </FormGroup>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={3} style={gridItemStyle}>
+                                <Paper variant="outlined">
+                                    {bet.teamHomeUrl && (
+                                        <Avatar
+                                            alt="Home Team"
+                                            src={bet.teamHomeUrl}
+                                            sx={{width: 120, height: 120}}
+                                            variant="square"
+                                        />
+                                    )}
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={4} style={gridItemStyle}>
+                                <Typography variant="h2" gutterBottom>
+                                    {bet.result || "-:-"}
                                 </Typography>
+                            </Grid>
+                            <Grid item xs={3} style={gridItemStyle}>
+                                <Paper variant="outlined">
+                                    {bet.teamAwayUrl && (
+                                        <Avatar
+                                            alt="Away Team"
+                                            src={bet.teamAwayUrl}
+                                            sx={{width: 120, height: 120}}
+                                            variant="square"
+                                        />
+                                    )}
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={1}>
+                            </Grid>
 
-                            )}
-                            {bet.url && (
-                                <Button variant='outlined' href={bet.url} target="_blank">
-                                    <OpenInNewIcon/> Infos
-                                </Button>
+                            {/*row end*/}
+                            <Grid item xs={1}>
+                                <Fab color='primary' aria-label='previous-bet' onClick={handlePreviousBet}>
+                                    <ArrowBackIosIcon/>
+                                </Fab>
+                            </Grid>
+                            <Grid item xs={3} style={gridItemStyle}>
+                                <Paper variant="outlined">
+                                    <Typography variant="h5" gutterBottom>
+                                        {bet.teamHomeDescription}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={4} style={gridItemStyle}>
+                                <Paper variant="outlined">
+                                    <Stack spacing={1}>
+                                        {league && (
+                                            <Typography variant="body2" gutterBottom>
+                                                <ReactCountryFlag
+                                                    countryCode={league.countryCode}
+                                                    className="emojiFlag" style={{
+                                                    fontSize: '2em',
+                                                    lineHeight: '2em',
+                                                }}
+                                                /> - {sportTypeName} - {league.name}
+                                            </Typography>
 
-                            )}
-                            <Typography variant="h6" gutterBottom style={{textAlign: "center"}}>
-                                {bet.date && (
-                                    new Date(bet.date).toLocaleString('de-DE'))}
-                            </Typography>
-                        </Stack>
-                    </Paper>
-                </Grid>
-                <Grid item xs={3} style={gridItemStyle}>
-                    <Paper variant="outlined">
-                        <Typography variant="h5" gutterBottom>
-                            {bet.teamAwayDescription}
-                        </Typography>
-                    </Paper>
-                </Grid>
-                <Grid item xs={1}>
-                    <Fab color='primary' aria-label='previous-bet' onClick={handleNextBet}>
-                        <ArrowForwardIosIcon/>
-                    </Fab>
-                </Grid>
+                                        )}
+                                        {bet.url && (
+                                            <Button variant='outlined' href={bet.url} target="_blank">
+                                                <OpenInNewIcon/> Infos
+                                            </Button>
 
-                {/* row end
+                                        )}
+                                        <Typography variant="h6" gutterBottom style={{textAlign: "center"}}>
+                                            {bet.date && (
+                                                new Date(bet.date).toLocaleString('de-DE'))}
+                                        </Typography>
+                                    </Stack>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={3} style={gridItemStyle}>
+                                <Paper variant="outlined">
+                                    <Typography variant="h5" gutterBottom>
+                                        {bet.teamAwayDescription}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={1}>
+                                <Fab color='primary' aria-label='previous-bet' onClick={handleNextBet}>
+                                    <ArrowForwardIosIcon/>
+                                </Fab>
+                            </Grid>
+
+                            {/* row end
                     start bet controls*/}
-                <Grid item xs={1}/>
-                {betType === '1X2' && (
-                    <Grid item xs={10} style={gridItemStyle}>
-                        <Button
-                            data-key="1"
-                            variant={selectedButton === "1" ? "contained" : "outlined"}
-                            color={selectedButton === "1" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            1
-                        </Button>
-                        <Button
-                            data-key="X"
-                            variant={selectedButton === "X" ? "contained" : "outlined"}
-                            color={selectedButton === "X" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            X
-                        </Button>
-                        <Button
-                            data-key="2"
-                            variant={selectedButton === "2" ? "contained" : "outlined"}
-                            color={selectedButton === "2" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            2
-                        </Button>
-                    </Grid>
-                )}
-                {betType === 'winner' && (
-                    <Grid item xs={10} style={gridItemStyle}>
-                        <Button
-                            data-key="1"
-                            variant={selectedButton === "1" ? "contained" : "outlined"}
-                            color={selectedButton === "1" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            1
-                        </Button>
-                        <Button
-                            data-key="2"
-                            variant={selectedButton === "2" ? "contained" : "outlined"}
-                            color={selectedButton === "2" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            2
-                        </Button>
-                    </Grid>
-                )}
-                {betType === 'overunder' && (
-                    <Grid item xs={10} style={gridItemStyle}>
-                        <Button
-                            data-key="Über"
-                            variant={selectedButton === "Über" ? "contained" : "outlined"}
-                            color={selectedButton === "Über" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            Über
-                        </Button>
-                        <Button
-                            data-key="Unter"
-                            variant={selectedButton === "Unter" ? "contained" : "outlined"}
-                            color={selectedButton === "Unter" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            Unter
-                        </Button>
-                    </Grid>
-                )}
-                {betType === 'question' && (
-                    <Grid item xs={10} style={gridItemStyle}>
-                        <Button
-                            data-key="Ja"
-                            variant={selectedButton === "Ja" ? "contained" : "outlined"}
-                            color={selectedButton === "Ja" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            Ja
-                        </Button>
-                        <Button
-                            data-key="Nein"
-                            variant={selectedButton === "Nein" ? "contained" : "outlined"}
-                            color={selectedButton === "Nein" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            Nein
-                        </Button>
-                    </Grid>
-                )}
-                {betType === '1or2' && (
-                    <Grid item xs={10} style={gridItemStyle}>
-                        <Button
-                            data-key="1"
-                            variant={selectedButton === "1" ? "contained" : "outlined"}
-                            color={selectedButton === "1" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            1
-                        </Button>
-                        <Button
-                            data-key="2"
-                            variant={selectedButton === "2" ? "contained" : "outlined"}
-                            color={selectedButton === "2" ? "primary" : "error"}
-                            disabled={isLocked === true}
-                            onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                        >
-                            2
-                        </Button>
-                    </Grid>
-                )}
-                {betType === 'result' && (
-                    <Grid item xs={10} style={gridItemStyle}>
-                        <TextField
-                            value={homeResult}
-                            onChange={(e) => setHomeResult(e.target.value)}
-                            autoFocus
-                            type="number"
-                            margin="dense"
-                            id="textFieldHomeResult"
-                            label="Heimteam"
-                            fullWidth
-                            variant="standard"
-                            disabled={isLocked === true}
-                        />
-                        :
-                        <TextField
-                            value={awayResult}
-                            onChange={(e) => setAwayResult(e.target.value)}
-                            autoFocus
-                            type="number"
-                            margin="dense"
-                            id="textFieldAwayResult"
-                            label="Auswärtsteam"
-                            fullWidth
-                            variant="standard"
-                            disabled={isLocked === true}
-                        />
-                    </Grid>
-                )}
-                <Grid item xs={1}/>
+                            <Grid item xs={1}/>
+                            {betType === '1X2' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Button
+                                        data-key="1"
+                                        variant={selectedButton === "1" ? "contained" : "outlined"}
+                                        color={selectedButton === "1" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        1
+                                    </Button>
+                                    <Button
+                                        data-key="X"
+                                        variant={selectedButton === "X" ? "contained" : "outlined"}
+                                        color={selectedButton === "X" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        X
+                                    </Button>
+                                    <Button
+                                        data-key="2"
+                                        variant={selectedButton === "2" ? "contained" : "outlined"}
+                                        color={selectedButton === "2" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        2
+                                    </Button>
+                                </Grid>
+                            )}
+                            {betType === 'winner' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Button
+                                        data-key="1"
+                                        variant={selectedButton === "1" ? "contained" : "outlined"}
+                                        color={selectedButton === "1" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        1
+                                    </Button>
+                                    <Button
+                                        data-key="2"
+                                        variant={selectedButton === "2" ? "contained" : "outlined"}
+                                        color={selectedButton === "2" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        2
+                                    </Button>
+                                </Grid>
+                            )}
+                            {betType === 'overunder' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Button
+                                        data-key="Über"
+                                        variant={selectedButton === "Über" ? "contained" : "outlined"}
+                                        color={selectedButton === "Über" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        Über
+                                    </Button>
+                                    <Button
+                                        data-key="Unter"
+                                        variant={selectedButton === "Unter" ? "contained" : "outlined"}
+                                        color={selectedButton === "Unter" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        Unter
+                                    </Button>
+                                </Grid>
+                            )}
+                            {betType === 'question' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Button
+                                        data-key="Ja"
+                                        variant={selectedButton === "Ja" ? "contained" : "outlined"}
+                                        color={selectedButton === "Ja" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        Ja
+                                    </Button>
+                                    <Button
+                                        data-key="Nein"
+                                        variant={selectedButton === "Nein" ? "contained" : "outlined"}
+                                        color={selectedButton === "Nein" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        Nein
+                                    </Button>
+                                </Grid>
+                            )}
+                            {betType === '1or2' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Button
+                                        data-key="1"
+                                        variant={selectedButton === "1" ? "contained" : "outlined"}
+                                        color={selectedButton === "1" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        1
+                                    </Button>
+                                    <Button
+                                        data-key="2"
+                                        variant={selectedButton === "2" ? "contained" : "outlined"}
+                                        color={selectedButton === "2" ? "primary" : "error"}
+                                        disabled={isLocked === true}
+                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
+                                    >
+                                        2
+                                    </Button>
+                                </Grid>
+                            )}
+                            {betType === 'result' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <TextField
+                                        value={homeResult}
+                                        onChange={(e) => setHomeResult(e.target.value)}
+                                        autoFocus
+                                        type="number"
+                                        margin="dense"
+                                        id="textFieldHomeResult"
+                                        label="Heimteam"
+                                        fullWidth
+                                        variant="standard"
+                                        disabled={isLocked === true}
+                                    />
+                                    :
+                                    <TextField
+                                        value={awayResult}
+                                        onChange={(e) => setAwayResult(e.target.value)}
+                                        autoFocus
+                                        type="number"
+                                        margin="dense"
+                                        id="textFieldAwayResult"
+                                        label="Auswärtsteam"
+                                        fullWidth
+                                        variant="standard"
+                                        disabled={isLocked === true}
+                                    />
+                                </Grid>
+                            )}
+                            <Grid item xs={1}/>
 
-                {/* row end */}
-                <Grid item xs={1}/>
-                <Grid item xs={10} style={gridItemStyle}>
-                    <Paper variant="outlined">
-                        <Typography style={{wordWrap: 'break-word', overflowWrap: 'break-word'}}>
-                            {betTypes.find((e) => e.key === bet.type)?.sentence ?? ""}{bet.typeCondition}{bet.question}
-                        </Typography>
-                    </Paper>
-                </Grid>
-                <Grid item xs={1}/>
-            </Grid>
-        </Box>
+                            {/* row end */}
+                            <Grid item xs={1}/>
+                            <Grid item xs={10} style={gridItemStyle}>
+                                <Paper variant="outlined">
+                                    <Typography style={{wordWrap: 'break-word', overflowWrap: 'break-word'}}>
+                                        {betTypes.find((e) => e.key === bet.type)?.sentence ?? ""}{bet.typeCondition}{bet.question}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={1}/>
+                        </Grid>
+                    </Box>
+                )
+            }
+        </div>
     )
 }
 
