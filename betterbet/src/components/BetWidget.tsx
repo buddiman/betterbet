@@ -303,6 +303,23 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                     >
                         <Grid container spacing={0} justifyContent="center" alignItems="center"
                               style={{width: '100%', height: 'auto'}}>
+                            <Grid item xs={12} style={{...gridItemStyle, height: 20}}>
+                                <FormControl component="fieldset">
+                                    <FormGroup aria-label="position" row>
+                                        <FormControlLabel
+                                            value="end"
+                                            control={<Switch color="primary" checked={showMissing}
+                                                             onChange={handleSwitchChange}/>}
+                                            label={
+                                                <span style={{display: 'block', textAlign: 'center'}}>
+                                        Nur fehlende anzeigen
+                                    </span>
+                                            }
+                                            labelPlacement="end"
+                                        />
+                                    </FormGroup>
+                                </FormControl>
+                            </Grid>
                             <Grid item xs={4} style={{...gridItemStyle, height: 150}}>
                                 <Paper variant="outlined">
                                     {bet.teamHomeUrl && (
