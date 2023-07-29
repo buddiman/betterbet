@@ -24,6 +24,7 @@ import api from "../api"
 import { SportType } from "shared/models/sportType";
 import { League } from "shared/models/league";
 import ReactCountryFlag from "react-country-flag"
+import BetButtons from "./BetButtons";
 
 interface BetWidgetProps {
     eventId: number | undefined
@@ -72,10 +73,15 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     const isMobile = window.matchMedia('(max-width: 767px)').matches
 
-    const handleBetButton = (key: string | undefined) => {
+    const handleBetButton = async (key: string | undefined) => {
         if (typeof key === "string") {
-            console.log(key)
             setSelectedButton(key)
+            const response = await api.put('/betInstance', {
+                betId: bet.id,
+                userId: currentUser?.id,
+                userBet: key,
+                points: -1
+            })
         }
     };
 
@@ -123,23 +129,6 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     }, [])
 
-
-    useEffect(() => {
-        console.log("selected button: " + selectedButton)
-        if (!isLocked && selectedButton !== '') {
-            const updateBetInstance = async () => {
-                const response = await api.put('/betInstance', {
-                    betId: bet.id,
-                    userId: currentUser?.id,
-                    userBet: selectedButton,
-                    points: -1
-                })
-            }
-            if (bet.type !== 'result') {
-                updateBetInstance()
-            }
-        }
-    }, [selectedButton])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -203,12 +192,10 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                     const betInstance = responseData.userBet
                     if (bet.type === 'result' && betInstance) {
                         const result = betInstance.split(':')
-                        console.log(result)
                         setHomeResult(result[0])
                         setAwayResult(result[1])
                     }
                     if (bet.type !== 'result' && betInstance) {
-                        console.log("BUTTON FOUND")
                         setSelectedButton(betInstance)
                     }
                 } else if (bet.type !== 'result') {
@@ -376,121 +363,22 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             <Grid item xs={1} style={{...gridItemStyle, height: 100}}/>
                             {betType === '1X2' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <Button
-                                        data-key="1"
-                                        variant={selectedButton === "1" ? "contained" : "outlined"}
-                                        color={selectedButton === "1" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        1
-                                    </Button>
-                                    <Button
-                                        data-key="X"
-                                        variant={selectedButton === "X" ? "contained" : "outlined"}
-                                        color={selectedButton === "X" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        X
-                                    </Button>
-                                    <Button
-                                        data-key="2"
-                                        variant={selectedButton === "2" ? "contained" : "outlined"}
-                                        color={selectedButton === "2" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        2
-                                    </Button>
+                                    <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
-                            {betType === 'winner' && (
+                            {(betType === 'winner' || betType === '1or2') && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <Button
-                                        data-key="1"
-                                        variant={selectedButton === "1" ? "contained" : "outlined"}
-                                        color={selectedButton === "1" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        1
-                                    </Button>
-                                    <Button
-                                        data-key="2"
-                                        variant={selectedButton === "2" ? "contained" : "outlined"}
-                                        color={selectedButton === "2" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        2
-                                    </Button>
+                                    <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'overunder' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <Button
-                                        data-key="Über"
-                                        variant={selectedButton === "Über" ? "contained" : "outlined"}
-                                        color={selectedButton === "Über" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        Über
-                                    </Button>
-                                    <Button
-                                        data-key="Unter"
-                                        variant={selectedButton === "Unter" ? "contained" : "outlined"}
-                                        color={selectedButton === "Unter" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        Unter
-                                    </Button>
+                                    <BetButtons buttonList={["Über", "Unter"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'question' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <Button
-                                        data-key="Ja"
-                                        variant={selectedButton === "Ja" ? "contained" : "outlined"}
-                                        color={selectedButton === "Ja" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        Ja
-                                    </Button>
-                                    <Button
-                                        data-key="Nein"
-                                        variant={selectedButton === "Nein" ? "contained" : "outlined"}
-                                        color={selectedButton === "Nein" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        Nein
-                                    </Button>
-                                </Grid>
-                            )}
-                            {betType === '1or2' && (
-                                <Grid item xs={10} style={gridItemStyle}>
-                                    <Button
-                                        data-key="1"
-                                        variant={selectedButton === "1" ? "contained" : "outlined"}
-                                        color={selectedButton === "1" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        1
-                                    </Button>
-                                    <Button
-                                        data-key="2"
-                                        variant={selectedButton === "2" ? "contained" : "outlined"}
-                                        color={selectedButton === "2" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        2
-                                    </Button>
+                                    <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'result' && (
@@ -688,121 +576,22 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             <Grid item xs={1}/>
                             {betType === '1X2' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <Button
-                                        data-key="1"
-                                        variant={selectedButton === "1" ? "contained" : "outlined"}
-                                        color={selectedButton === "1" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        1
-                                    </Button>
-                                    <Button
-                                        data-key="X"
-                                        variant={selectedButton === "X" ? "contained" : "outlined"}
-                                        color={selectedButton === "X" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        X
-                                    </Button>
-                                    <Button
-                                        data-key="2"
-                                        variant={selectedButton === "2" ? "contained" : "outlined"}
-                                        color={selectedButton === "2" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        2
-                                    </Button>
+                                    <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
-                            {betType === 'winner' && (
+                            {(betType === 'winner' || betType === '1or2') && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <Button
-                                        data-key="1"
-                                        variant={selectedButton === "1" ? "contained" : "outlined"}
-                                        color={selectedButton === "1" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        1
-                                    </Button>
-                                    <Button
-                                        data-key="2"
-                                        variant={selectedButton === "2" ? "contained" : "outlined"}
-                                        color={selectedButton === "2" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        2
-                                    </Button>
+                                    <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'overunder' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <Button
-                                        data-key="Über"
-                                        variant={selectedButton === "Über" ? "contained" : "outlined"}
-                                        color={selectedButton === "Über" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        Über
-                                    </Button>
-                                    <Button
-                                        data-key="Unter"
-                                        variant={selectedButton === "Unter" ? "contained" : "outlined"}
-                                        color={selectedButton === "Unter" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        Unter
-                                    </Button>
+                                    <BetButtons buttonList={["Über", "Unter"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'question' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <Button
-                                        data-key="Ja"
-                                        variant={selectedButton === "Ja" ? "contained" : "outlined"}
-                                        color={selectedButton === "Ja" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        Ja
-                                    </Button>
-                                    <Button
-                                        data-key="Nein"
-                                        variant={selectedButton === "Nein" ? "contained" : "outlined"}
-                                        color={selectedButton === "Nein" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        Nein
-                                    </Button>
-                                </Grid>
-                            )}
-                            {betType === '1or2' && (
-                                <Grid item xs={10} style={gridItemStyle}>
-                                    <Button
-                                        data-key="1"
-                                        variant={selectedButton === "1" ? "contained" : "outlined"}
-                                        color={selectedButton === "1" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        1
-                                    </Button>
-                                    <Button
-                                        data-key="2"
-                                        variant={selectedButton === "2" ? "contained" : "outlined"}
-                                        color={selectedButton === "2" ? "primary" : "error"}
-                                        disabled={isLocked === true}
-                                        onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
-                                    >
-                                        2
-                                    </Button>
+                                    <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'result' && (
