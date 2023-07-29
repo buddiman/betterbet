@@ -121,13 +121,6 @@ const Home: FC<any> = (): ReactElement => {
                         </TableContainer>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={6} style={gridItemStyle}>
-                    <Paper>
-                        <Typography variant="h6" align="center">
-                            Coming Soon
-                        </Typography>
-                    </Paper>
-                </Grid>
             </Grid>
         </Box>
     );
