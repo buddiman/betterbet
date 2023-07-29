@@ -19,6 +19,7 @@ import {
     Typography
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import AddEvent from "../components/AddEvent";
 import AddLeague from "../components/AddLeague";
@@ -270,14 +271,14 @@ export default function Manage() {
                                             <TableCell align="center"><Button href={e.url || ""}
                                                                               target="_blank">Infos</Button></TableCell>
                                             <TableCell align="center">
-                                                <Button
+                                                <IconButton
                                                     disabled={true}
                                                     data-key={e.id}
                                                     data-type={e.type}
                                                     onClick={(event) => handleClickOpenEvaluate(event.currentTarget.dataset.key, event.currentTarget.dataset.type)}
                                                 >
-                                                    Bearbeiten
-                                                </Button>
+                                                    <EditIcon/>
+                                                </IconButton>
                                             </TableCell>
                                             <TableCell align="center">
                                                 <IconButton
