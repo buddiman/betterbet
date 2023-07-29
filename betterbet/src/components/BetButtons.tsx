@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface BetButtonsProps {
     buttonList: string[]
@@ -9,6 +9,7 @@ interface BetButtonsProps {
 }
 
 const BetButtons: React.FC<BetButtonsProps> = ({buttonList, selectedButton, disabled, onValueChange}) => {
+
     const handleBetButton = (key: string | undefined) => {
         if (typeof key === "string") {
             console.log(key)
@@ -21,12 +22,12 @@ const BetButtons: React.FC<BetButtonsProps> = ({buttonList, selectedButton, disa
             {buttonList.map((e) => (
                 <Button
                     data-key={e}
-                    variant={selectedButton === "Ja" ? "contained" : "outlined"}
-                    color={selectedButton === "Ja" ? "primary" : "error"}
+                    variant={selectedButton === e ? "contained" : "outlined"}
+                    color={selectedButton === e ? "primary" : "error"}
                     disabled={disabled}
                     onClick={(event) => handleBetButton(event.currentTarget.dataset.key)}
                 >
-                    e
+                    {e}
                 </Button>
             ))}
         </div>
