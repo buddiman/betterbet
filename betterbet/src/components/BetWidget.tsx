@@ -368,7 +368,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                                     <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
-                            {betType === 'winner' && (
+                            {(betType === 'winner' || betType === '1or2') && (
                                 <Grid item xs={10} style={gridItemStyle}>
                                     <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
@@ -381,11 +381,6 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             {betType === 'question' && (
                                 <Grid item xs={10} style={gridItemStyle}>
                                     <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
-                                </Grid>
-                            )}
-                            {betType === '1or2' && (
-                                <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'result' && (
