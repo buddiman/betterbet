@@ -21,6 +21,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import RedoIcon from '@mui/icons-material/Redo';
 import AddEvent from "../components/AddEvent";
 import AddLeague from "../components/AddLeague";
 import AddBet from "../components/AddBet";
@@ -247,6 +248,7 @@ export default function Manage() {
                                         <TableCell align="center">Frage</TableCell>
                                         <TableCell align="center">Link</TableCell>
                                         <TableCell align="center">Bearbeiten</TableCell>
+                                        <TableCell align="center">Neu Auswerten</TableCell>
                                         <TableCell align="center">Löschen</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -260,13 +262,13 @@ export default function Manage() {
                                             <TableCell align="center">{e.type}</TableCell>
                                             <TableCell align="center">{e.typeCondition}</TableCell>
                                             <TableCell align="center">
-                                                { e.question && (
-                                                <Tooltip title={e.question}>
-                                                    <IconButton>
-                                                        <QuestionMarkIcon/>
-                                                    </IconButton>
-                                                </Tooltip>
-                                                    )}
+                                                {e.question && (
+                                                    <Tooltip title={e.question}>
+                                                        <IconButton>
+                                                            <QuestionMarkIcon/>
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                )}
                                             </TableCell>
                                             <TableCell align="center"><Button href={e.url || ""}
                                                                               target="_blank">Infos</Button></TableCell>
@@ -278,6 +280,15 @@ export default function Manage() {
                                                     onClick={(event) => handleClickOpenEvaluate(event.currentTarget.dataset.key, event.currentTarget.dataset.type)}
                                                 >
                                                     <EditIcon/>
+                                                </IconButton>
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <IconButton
+                                                    data-key={e.id}
+                                                    data-type={e.type}
+                                                    onClick={(event) => handleClickOpenEvaluate(event.currentTarget.dataset.key, event.currentTarget.dataset.type)}
+                                                >
+                                                    <RedoIcon/>
                                                 </IconButton>
                                             </TableCell>
                                             <TableCell align="center">
