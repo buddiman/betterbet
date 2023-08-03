@@ -241,8 +241,12 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     const handleNextBet = () => {
         console.log("NEXT")
         setBetIndex((prevIndex) => {
-            const newIndex = prevIndex + 1;
-            return newIndex < bets.length ? newIndex : prevIndex;
+            if(prevIndex === bets.length - 1) {
+                return 0
+            } else {
+                const newIndex = prevIndex + 1;
+                return newIndex < bets.length ? newIndex : prevIndex;
+            }
         });
         setSelectedButton('')
     };
@@ -250,8 +254,12 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     const handlePreviousBet = () => {
         console.log("PREVIOUS")
         setBetIndex((prevIndex) => {
-            const newIndex = prevIndex - 1;
-            return newIndex >= 0 ? newIndex : prevIndex;
+            if(prevIndex === 0) {
+                return bets.length - 1
+            } else {
+                const newIndex = prevIndex - 1;
+                return newIndex >= 0 ? newIndex : prevIndex;
+            }
         });
         setSelectedButton('')
     };
