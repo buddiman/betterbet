@@ -10,7 +10,7 @@ import {
     Fab,
     Box,
     Paper,
-    Switch,
+    Switch, Slider,
     FormControl, FormLabel, FormControlLabel, FormGroup
 } from "@mui/material";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -70,6 +70,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     const [awayResult, setAwayResult] = useState('-')
     const [isLocked, setIsLocked] = useState(false)
     const [showMissing, setShowMissing] = useState(false);
+    const [sliderValue, setSliderValue] = useState<number>(0);
 
     const isMobile = window.matchMedia('(max-width: 767px)').matches
 
@@ -87,6 +88,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setShowMissing(event.target.checked);
+        setSliderValue(0)
     };
 
     const borderColor = () => {
@@ -128,6 +130,13 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
         setCurrentUser(user)
 
     }, [])
+
+    const handleSliderChange = (event: Event, newValue: number | number[]) => {
+        if (typeof newValue === 'number') {
+            setSliderValue(newValue);
+            setBetIndex(newValue)
+        }
+    };
 
 
     useEffect(() => {
@@ -241,8 +250,14 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     const handleNextBet = () => {
         console.log("NEXT")
         setBetIndex((prevIndex) => {
-            const newIndex = prevIndex + 1;
-            return newIndex < bets.length ? newIndex : prevIndex;
+            if (prevIndex === bets.length - 1) {
+                setSliderValue(0)
+                return 0
+            } else {
+                const newIndex = prevIndex + 1;
+                setSliderValue(newIndex)
+                return newIndex < bets.length ? newIndex : prevIndex;
+            }
         });
         setSelectedButton('')
     };
@@ -250,8 +265,14 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     const handlePreviousBet = () => {
         console.log("PREVIOUS")
         setBetIndex((prevIndex) => {
-            const newIndex = prevIndex - 1;
-            return newIndex >= 0 ? newIndex : prevIndex;
+            if (prevIndex === 0) {
+                setSliderValue(bets.length - 1)
+                return bets.length - 1
+            } else {
+                const newIndex = prevIndex - 1;
+                setSliderValue(newIndex)
+                return newIndex >= 0 ? newIndex : prevIndex;
+            }
         });
         setSelectedButton('')
     };
@@ -354,7 +375,8 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             <Grid item xs={1}/>
                             <Grid item xs={10} style={{...gridItemStyle, height: 120}}>
                                 <Paper variant="outlined">
-                                    <Typography variant="caption" style={{wordWrap: 'break-word', overflowWrap: 'break-word'}}>
+                                    <Typography variant="caption"
+                                                style={{wordWrap: 'break-word', overflowWrap: 'break-word'}}>
                                         {betTypes.find((e) => e.key === bet.type)?.sentence ?? ""}{bet.typeCondition}{bet.question}
                                     </Typography>
                                 </Paper>
@@ -363,22 +385,26 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             <Grid item xs={1} style={{...gridItemStyle, height: 100}}/>
                             {betType === '1X2' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
+                                    <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {(betType === 'winner' || betType === '1or2') && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
+                                    <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'overunder' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["Über", "Unter"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
+                                    <BetButtons buttonList={["Über", "Unter"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'question' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
+                                    <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'result' && (
@@ -468,6 +494,21 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
                         <Grid container spacing={0} justifyContent="center" alignItems="center"
                               style={{width: '100%', height: '100%'}}>
+                            <Grid item xs={1}/>
+                            <Grid item xs={10} style={gridItemStyle}>
+                                <Slider
+                                    aria-label="Temperature"
+                                    defaultValue={0}
+                                    valueLabelDisplay="auto"
+                                    step={1}
+                                    marks
+                                    min={0}
+                                    max={bets.length - 1}
+                                    value={sliderValue}
+                                    onChange={handleSliderChange}
+                                />
+                            </Grid>
+                            <Grid item xs={1}/>
                             <Grid item xs={1}>
                                 <FormControl component="fieldset">
                                     <FormGroup aria-label="position" row>
@@ -576,22 +617,26 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             <Grid item xs={1}/>
                             {betType === '1X2' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
+                                    <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {(betType === 'winner' || betType === '1or2') && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
+                                    <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'overunder' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["Über", "Unter"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
+                                    <BetButtons buttonList={["Über", "Unter"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'question' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton} disabled={isLocked} onValueChange={handleBetButton}/>
+                                    <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
                                 </Grid>
                             )}
                             {betType === 'result' && (
