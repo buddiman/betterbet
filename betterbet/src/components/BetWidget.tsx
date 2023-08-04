@@ -111,16 +111,18 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     useEffect(() => {
         if (!isLocked) {
-            const updateBetInstance = async () => {
-                const response = await api.put('/betInstance', {
-                    betId: bet.id,
-                    userId: currentUser?.id,
-                    userBet: homeResult + ':' + awayResult,
-                    points: -1
-                })
-            }
-            if (!(homeResult === '-' || awayResult === '-')) {
-                updateBetInstance()
+            if(bet.type === "result") {
+                const updateBetInstance = async () => {
+                    const response = await api.put('/betInstance', {
+                        betId: bet.id,
+                        userId: currentUser?.id,
+                        userBet: homeResult + ':' + awayResult,
+                        points: -1
+                    })
+                }
+                if (!(homeResult === '-' || awayResult === '-')) {
+                    updateBetInstance()
+                }
             }
         }
     }, [homeResult, awayResult])
