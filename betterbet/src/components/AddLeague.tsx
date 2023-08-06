@@ -1,7 +1,7 @@
 import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../api"
+import { SportType } from "shared/models/sportType";
 
 interface AddLeagueProps {
     isOpened: boolean
@@ -14,10 +14,23 @@ export default function AddLeague(props: AddLeagueProps) {
     const [sportTypeValue, setSportTypeValue] = React.useState<any>(null)
 
     const [isOpened, setIsOpened] = React.useState<boolean>(false)
+    const [sportTypes, setSportTypes] = useState<SportType[] | undefined>(undefined)
 
     useEffect(() => {
         setIsOpened(props.isOpened)
     }, [props.isOpened])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const responseSportTypes = await api.get('/sporttypes')
+                setSportTypes(responseSportTypes.data.sportTypes)
+            } catch (error) {
+                console.error('Error fetching data from API:', error);
+            }
+        };
+        fetchData()
+    }, []);
 
     const addLeague = async () => {
         const league = {
@@ -60,15 +73,17 @@ export default function AddLeague(props: AddLeagueProps) {
                     variant="standard"
                 />
                 {/*Replace with https://mui.com/material-ui/react-autocomplete/#country-select*/}
-                <Autocomplete
-                    disablePortal
-                    onChange={(e, value) => setSportTypeValue(value)}
-                    id="sporttype"
-                    options={sportTypes}
-                    getOptionLabel={(option) => option.label}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="Sport Type" />}
-                />
+                {sportTypes &&
+                    <Autocomplete
+                        disablePortal
+                        onChange={(e, value) => setSportTypeValue(value)}
+                        id="sporttype"
+                        options={sportTypes}
+                        getOptionLabel={(option) => option.name}
+                        sx={{width: 300}}
+                        renderInput={(params) => <TextField {...params} label="Sport Type"/>}
+                    />
+                }
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
@@ -77,13 +92,3 @@ export default function AddLeague(props: AddLeagueProps) {
         </Dialog>
     )
 }
-
-const sportTypes = [
-    {label: "Fußball", id: 1},
-    {label: "Tennis", id: 2},
-    {label: "Basketball", id: 3},
-    {label: "Feldhockey", id: 4},
-    {label: "American Football", id: 5},
-    {label: "Baseball", id: 6},
-    {label: "Handball", id: 7},
-]
