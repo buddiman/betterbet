@@ -1,28 +1,23 @@
 import React, { ReactElement, FC, useEffect, useState } from "react";
-import { Box, Button, ButtonGroup, Stack } from "@mui/material";
+import { Box, Select, MenuItem, Stack, SelectChangeEvent, InputLabel } from "@mui/material";
 import BetWidget from '../components/BetWidget'
-import {Event} from "shared/models/event"
+import { Event } from "shared/models/event"
 import api from "../api"
 
 const Bets: FC<any> = (): ReactElement => {
     const [events, setEvents] = useState<Event[]>([]);
-    const [selectedEvent, setSelectedEvent] = useState<number>(1)
+    const [selectedEvent, setSelectedEvent] = useState<number>(1); // Initialize with an empty string
 
-    const handleSelectedEventChange = (key: string | undefined) => {
-        console.log(key)
-        let eventId: number = 0
-        if (typeof key === "string") {
-            console.log(key)
-            eventId = parseInt(key)
-        }
+    const handleSelectedEventChange = (event: SelectChangeEvent<any>) => {
+        const eventId = event.target.value as number;
         setSelectedEvent(eventId);
-        console.log("Set event ID to " + eventId)
+        console.log("Set event ID to " + eventId);
     };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get("/events")
+                const response = await api.get("/events");
                 setEvents(response.data.event);
             } catch (error) {
                 console.error('Error fetching data from API:', error);
@@ -40,17 +35,19 @@ const Bets: FC<any> = (): ReactElement => {
             alignItems: 'center'
         }}>
             <Stack spacing={2}>
-                <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                <InputLabel id="eventSelectorLabel">Spieltag wählen</InputLabel>
+                <Select
+                    labelId="eventSelectorLabel"
+                    value={selectedEvent}
+                    onChange={handleSelectedEventChange}
+                    color="success"
+                >
                     {events.map((e) => (
-                        <Button
-                            data-key={e.id}
-                            color="success"
-                            onClick={(event) => handleSelectedEventChange(event.currentTarget.dataset.key)}
-                        >
+                        <MenuItem key={e.id} value={e.id}>
                             {e.name}
-                        </Button>
+                        </MenuItem>
                     ))}
-                </ButtonGroup>
+                </Select>
                 <BetWidget eventId={selectedEvent}/>
             </Stack>
         </Box>
