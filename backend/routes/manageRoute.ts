@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import { getBetInstancesByBetId, updateBetInstance } from "../database/dto/betInstance";
 import { calculatePointsForBet } from "../util/points";
-import { getBet, updateBet } from "../database/dto/bet";
+import { getBet, getPlayerPointsPerEvent, updateBet } from "../database/dto/bet";
 import { getBetInstancesPointsPerUserId, getEventsWithMissingBetInstances } from "../database/dto/statistics";
 import { getAllUsers } from "../database/dto/user";
 import { User } from "shared/models/user";
@@ -57,6 +57,21 @@ manageRoute.get('/userpoints', async (req: Request, res: Response): Promise<void
         })
     }
 
+})
+
+manageRoute.get('/userpointsperevent', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const response = await getPlayerPointsPerEvent()
+        res.json({
+            data: response,
+            success: true
+        })
+    } catch (e) {
+        res.json({
+            success: false,
+            message: "ERROR"
+        })
+    }
 })
 
 manageRoute.post('/missingBetEvents', async (req: Request, res: Response): Promise<void> => {

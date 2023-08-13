@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import React, { useEffect } from "react";
 
 interface BetButtonsProps {
@@ -18,7 +18,7 @@ const BetButtons: React.FC<BetButtonsProps> = ({buttonList, selectedButton, disa
     };
 
     return (
-        <div>
+        <Paper variant="outlined">
             {buttonList.map((e) => (
                 <Button
                     data-key={e}
@@ -30,7 +30,7 @@ const BetButtons: React.FC<BetButtonsProps> = ({buttonList, selectedButton, disa
                     {e}
                 </Button>
             ))}
-        </div>
+        </Paper>
     )
 }
 
