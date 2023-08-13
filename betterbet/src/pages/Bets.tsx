@@ -18,7 +18,6 @@ const Bets: FC<any> = (): ReactElement => {
     const handleSelectedEventChange = (event: SelectChangeEvent<any>) => {
         const eventId = event.target.value as number;
         setSelectedEvent(eventId);
-        console.log("Set event ID to " + eventId);
     };
 
     useEffect(() => {

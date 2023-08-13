@@ -111,7 +111,7 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     useEffect(() => {
         if (!isLocked) {
-            if(bet.type === "result") {
+            if (bet.type === "result") {
                 const updateBetInstance = async () => {
                     const response = await api.put('/betInstance', {
                         betId: bet.id,
@@ -385,59 +385,62 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             </Grid>
                             <Grid item xs={1}/>
                             <Grid item xs={1} style={{...gridItemStyle, height: 100}}/>
-                            {betType === '1X2' && (
-                                <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton}
-                                                disabled={isLocked} onValueChange={handleBetButton}/>
-                                </Grid>
-                            )}
-                            {(betType === 'winner' || betType === '1or2') && (
-                                <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton}
-                                                disabled={isLocked} onValueChange={handleBetButton}/>
-                                </Grid>
-                            )}
-                            {betType === 'overunder' && (
-                                <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["Über", "Unter"]} selectedButton={selectedButton}
-                                                disabled={isLocked} onValueChange={handleBetButton}/>
-                                </Grid>
-                            )}
-                            {betType === 'question' && (
-                                <Grid item xs={10} style={gridItemStyle}>
-                                    <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton}
-                                                disabled={isLocked} onValueChange={handleBetButton}/>
-                                </Grid>
-                            )}
-                            {betType === 'result' && (
-                                <Grid item xs={10} style={gridItemStyle}>
-                                    <TextField
-                                        value={homeResult}
-                                        onChange={(e) => setHomeResult(e.target.value)}
-                                        autoFocus
-                                        type="number"
-                                        margin="dense"
-                                        id="textFieldHomeResult"
-                                        label="Heimteam"
-                                        fullWidth
-                                        variant="standard"
-                                        disabled={isLocked === true}
-                                    />
-                                    :
-                                    <TextField
-                                        value={awayResult}
-                                        onChange={(e) => setAwayResult(e.target.value)}
-                                        autoFocus
-                                        type="number"
-                                        margin="dense"
-                                        id="textFieldAwayResult"
-                                        label="Auswärtsteam"
-                                        fullWidth
-                                        variant="standard"
-                                        disabled={isLocked === true}
-                                    />
-                                </Grid>
-                            )}
+                            <Paper variant="outlined">
+                                {betType === '1X2' && (
+                                    <Grid item xs={10} style={gridItemStyle}>
+                                        <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton}
+                                                    disabled={isLocked} onValueChange={handleBetButton}/>
+                                    </Grid>
+                                )}
+                                {(betType === 'winner' || betType === '1or2') && (
+                                    <Grid item xs={10} style={gridItemStyle}>
+                                        <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton}
+                                                    disabled={isLocked} onValueChange={handleBetButton}/>
+                                    </Grid>
+                                )}
+                                {betType === 'overunder' && (
+                                    <Grid item xs={10} style={gridItemStyle}>
+                                        <BetButtons buttonList={["Über", "Unter"]} selectedButton={selectedButton}
+                                                    disabled={isLocked} onValueChange={handleBetButton}/>
+                                    </Grid>
+                                )}
+                                {betType === 'question' && (
+                                    <Grid item xs={10} style={gridItemStyle}>
+                                        <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton}
+                                                    disabled={isLocked} onValueChange={handleBetButton}/>
+                                    </Grid>
+                                )}
+                                {betType === 'result' && (
+                                    <Grid item xs={10} style={gridItemStyle}>
+                                        <TextField
+                                            value={homeResult}
+                                            onChange={(e) => setHomeResult(e.target.value)}
+                                            autoFocus
+                                            type="number"
+                                            margin="dense"
+                                            id="textFieldHomeResult"
+                                            label="Heimteam"
+                                            fullWidth
+                                            variant="standard"
+                                            disabled={isLocked === true}
+                                        />
+                                        :
+                                        <TextField
+                                            value={awayResult}
+                                            onChange={(e) => setAwayResult(e.target.value)}
+                                            autoFocus
+                                            type="number"
+                                            margin="dense"
+                                            id="textFieldAwayResult"
+                                            label="Auswärtsteam"
+                                            fullWidth
+                                            variant="standard"
+                                            disabled={isLocked === true}
+                                        />
+                                    </Grid>
+
+                                )}
+                            </Paper>
                             <Grid item xs={1}/>
                             <Grid item xs={2}>
                                 <Fab color='primary' aria-label='previous-bet' onClick={handlePreviousBet}>
@@ -643,31 +646,34 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
                             )}
                             {betType === 'result' && (
                                 <Grid item xs={10} style={gridItemStyle}>
-                                    <TextField
-                                        value={homeResult}
-                                        onChange={(e) => setHomeResult(e.target.value)}
-                                        autoFocus
-                                        type="number"
-                                        margin="dense"
-                                        id="textFieldHomeResult"
-                                        label="Heimteam"
-                                        fullWidth
-                                        variant="standard"
-                                        disabled={isLocked === true}
-                                    />
-                                    :
-                                    <TextField
-                                        value={awayResult}
-                                        onChange={(e) => setAwayResult(e.target.value)}
-                                        autoFocus
-                                        type="number"
-                                        margin="dense"
-                                        id="textFieldAwayResult"
-                                        label="Auswärtsteam"
-                                        fullWidth
-                                        variant="standard"
-                                        disabled={isLocked === true}
-                                    />
+                                    <Paper variant="outlined">
+                                        <TextField
+                                            value={homeResult}
+                                            onChange={(e) => setHomeResult(e.target.value)}
+                                            autoFocus
+                                            type="number"
+                                            margin="dense"
+                                            id="textFieldHomeResult"
+                                            label="Heimteam"
+                                            fullWidth
+                                            variant="standard"
+                                            disabled={isLocked === true}
+                                            style={{ maxWidth: '150px' }}
+                                        />
+                                        <TextField
+                                            value={awayResult}
+                                            onChange={(e) => setAwayResult(e.target.value)}
+                                            autoFocus
+                                            type="number"
+                                            margin="dense"
+                                            id="textFieldAwayResult"
+                                            label="Auswärtsteam"
+                                            fullWidth
+                                            variant="standard"
+                                            disabled={isLocked === true}
+                                            style={{ maxWidth: '150px' }}
+                                        />
+                                    </Paper>
                                 </Grid>
                             )}
                             <Grid item xs={1}/>

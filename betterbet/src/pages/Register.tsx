@@ -21,7 +21,6 @@ const RegisterForm: React.FC<RegisterFormProps> = () => {
         try {
             register(username, email, password).then(
                 () => {
-                    console.log("Registered new User!")
                     navigate("/login")
                     window.location.reload()
                 }
