@@ -31,12 +31,25 @@ interface BetWithInstances extends Bet {
     BetInstance: BetInstance[]
 }
 
+interface PointsPerEvent {
+    eventId: number,
+    eventName: string,
+    pointsPerUser: PointsPerUser[]
+}
+
+interface PointsPerUser {
+    userId: number,
+    points: number,
+    hasMostPoints: boolean
+}
+
 const Statistics: FC = (): ReactElement => {
     const [eventList, setEventList] = React.useState<Event[] | undefined>([])
     const [userList, setUserList] = React.useState<UsernameWithId[] | undefined>([])
     const [eventIdValue, setEventIdValue] = React.useState<any>(null)
     const [displayedBets, setDisplayedBets] = React.useState<BetWithInstances[] | undefined>(undefined)
     const [tabValue, setTabValue] = React.useState('one');
+    const [userPointsPerEvent, setUserPointsPerEvent] = React.useState<PointsPerEvent[]>()
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
         setTabValue(newValue);
@@ -68,6 +81,8 @@ const Statistics: FC = (): ReactElement => {
                 const usersResponse = await api.get("/users")
                 setUserList(usersResponse.data.users)
                 const pointsResponse = await api.get('userpointsperevent')
+                console.log(pointsResponse.data.data)
+                setUserPointsPerEvent(pointsResponse.data.data)
             } catch (error) {
                 console.error('Error fetching data from API:', error);
             }
@@ -145,16 +160,18 @@ const Statistics: FC = (): ReactElement => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody style={{overflowY: 'auto'}}>
-                                        {displayedBets && displayedBets.map((e) => (
+                                        {userPointsPerEvent && userPointsPerEvent.map((e) => (
                                             <TableRow
-                                                key={e.id}
+                                                key={e.eventId}
                                             >
-                                                {userList && userList.map((u) => (
+                                                <TableCell>{e.eventName}</TableCell>
+                                                {e.pointsPerUser && e.pointsPerUser.map((u) => (
                                                     <TableCell
+                                                        key={u.userId + "-" + e.eventId}
                                                         align="center"
-                                                        sx={{backgroundColor: backgroundColor((e.BetInstance.find((b) => b.userId === u.id)?.points))}}
+                                                        sx={{ backgroundColor: u.hasMostPoints ? "green" : "white" }}
                                                     >
-                                                        {(e.BetInstance.find((b) => b.userId === u.id))?.userBet || "---"}
+                                                        {u.points}
                                                     </TableCell>
                                                 ))}
                                             </TableRow>
