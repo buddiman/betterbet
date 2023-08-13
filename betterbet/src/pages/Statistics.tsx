@@ -79,9 +79,8 @@ const Statistics: FC = (): ReactElement => {
                 const response = await api.get("/events")
                 setEventList(response.data.event);
                 const usersResponse = await api.get("/users")
-                setUserList(usersResponse.data.users)
+                setUserList(usersResponse.data.users.sort((a: UsernameWithId, b: UsernameWithId) => (a.id > b.id) ? 1 : -1))
                 const pointsResponse = await api.get('userpointsperevent')
-                console.log(pointsResponse.data.data)
                 setUserPointsPerEvent(pointsResponse.data.data)
             } catch (error) {
                 console.error('Error fetching data from API:', error);
