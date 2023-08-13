@@ -149,7 +149,7 @@ const Statistics: FC = (): ReactElement => {
                     {/*event overview*/}
                     <TabPanel value="one">
                         <Grid item xs={12} sm={12}>
-                            <TableContainer component={Paper} style={{maxHeight: 600}}>
+                            <TableContainer component={Paper} style={{maxHeight: 600, minWidth: 1200}}>
                                 <Table stickyHeader>
                                     <TableHead>
                                         <TableRow>
@@ -164,7 +164,14 @@ const Statistics: FC = (): ReactElement => {
                                             <TableRow
                                                 key={e.eventId}
                                             >
-                                                <TableCell>{e.eventName}</TableCell>
+                                                <TableCell
+                                                    align="center"
+                                                    sx={{
+                                                        minWidth: 150,
+                                                    }}
+                                                >
+                                                    {e.eventName}
+                                                </TableCell>
                                                 {e.pointsPerUser && e.pointsPerUser.map((u) => (
                                                     <TableCell
                                                         key={u.userId + "-" + e.eventId}
