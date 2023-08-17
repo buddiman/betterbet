@@ -29,7 +29,6 @@ import { Bet } from "shared/models/bet";
 import api from "../api";
 import Evaluate from "../components/Evaluate";
 import { Event } from "shared/models/event";
-import * as AuthService from "../services/auth.service";
 
 export default function Manage() {
     const [eventList, setEventList] = React.useState<Event[] | undefined>([])

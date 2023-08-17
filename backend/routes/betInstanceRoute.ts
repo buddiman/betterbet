@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { createBet, getBet, getBetsForEvent, updateBet } from '../database/dto/bet'
 import {
     createBetInstance,
     getBetInstance,

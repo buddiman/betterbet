@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import {
-    AppBar, Avatar, BottomNavigation, BottomNavigationAction,
-    Box, Button, Container,
-    CssBaseline, IconButton, Menu,
-    Stack,
-    Toolbar, Tooltip,
+    AppBar,
+    BottomNavigation,
+    BottomNavigationAction,
+    Box,
+    Button,
+    Container,
+    CssBaseline,
+    IconButton,
+    Menu,
+    Toolbar,
+    Tooltip,
     Typography
 } from "@mui/material"
 import MenuItem from '@mui/material/MenuItem';
@@ -15,7 +21,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import IUser from "./types/user.type";
 import * as AuthService from "./services/auth.service";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";

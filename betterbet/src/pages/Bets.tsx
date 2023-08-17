@@ -1,6 +1,6 @@
-import React, { ReactElement, FC, useEffect, useState, useRef } from "react";
-import { Box, Select, MenuItem, Stack, SelectChangeEvent, InputLabel } from "@mui/material";
-import BetWidget, {BetWidgetMethods} from '../components/BetWidget'
+import React, { FC, ReactElement, useEffect, useRef, useState } from "react";
+import { Box, InputLabel, MenuItem, Select, SelectChangeEvent, Stack } from "@mui/material";
+import BetWidget, { BetWidgetMethods } from '../components/BetWidget'
 import { Event } from "shared/models/event"
 import api from "../api"
 import * as AuthService from "../services/auth.service";

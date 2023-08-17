@@ -4,12 +4,10 @@ import {
     createUser,
     getAllUsernamesAndIds,
     getUserById,
-    getUserByUsername,
-    updateUser
+    getUserByUsername
 } from '../database/dto/user'
-import { hash, compare } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import { sign } from "jsonwebtoken";
-import { getBet } from "../database/dto/bet";
 import { betRoute } from "./betRoute";
 
 export const authRoute = express.Router()

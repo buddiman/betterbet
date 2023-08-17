@@ -1,19 +1,7 @@
-import React, { ReactElement, FC, useEffect, useState } from "react";
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import {
-    Box, Button,
-    Grid,
-    Paper, Snackbar,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow, TextField,
-    Typography
-} from "@mui/material";
+import React, { FC, ReactElement, useEffect, useState } from "react";
+import { Box, Grid, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import api from "../api";
 import * as AuthService from "../services/auth.service";
-import { login } from "../services/auth.service";
 
 interface UserPoints {
     username: string

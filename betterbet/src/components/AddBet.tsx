@@ -3,10 +3,12 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, InputLabel,
+    DialogTitle,
+    InputLabel,
     MenuItem,
-    Select, SelectChangeEvent,
-    Stack, SxProps,
+    Select,
+    SelectChangeEvent,
+    Stack,
     TextField
 } from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
@@ -15,7 +17,6 @@ import api from "../api"
 import { Event } from "shared/models/event"
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { League } from "shared/models/league";
-import { Bet } from "shared/models/bet";
 import { SportType } from "shared/models/sportType";
 
 interface AddBetProps {
