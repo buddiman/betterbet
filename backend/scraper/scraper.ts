@@ -9,8 +9,65 @@ export async function scrape(url: string) {
     if (url.includes("flashscore")) {
         return await scrapeFlashscore(url)
     }
+    if (url.includes("fupa.net")) {
+        return await scrapeFupa(url)
+    }
 }
 
+async function scrapeFupa(url: string) {
+    try {
+        const apiUrl = "https://api.fupa.net/v1/matches/" + extractFupaMatchString(url)
+        const response = await axios.get(apiUrl)
+        const matchData = response.data
+        const bet: Bet = {
+            date: new Date(matchData["kickoff"]),
+            eventId: undefined,
+            leagueId: undefined,
+            question: undefined,
+            result: undefined,
+            type: "1X2",
+            typeCondition: undefined,
+            id: undefined,
+            teamHomeDescription: matchData["homeTeamName"],
+            teamHomeUrl: matchData["homeTeam"]["image"]["path"] + "128x128.jpeg",
+            teamAwayDescription: matchData["awayTeamName"],
+            teamAwayUrl: matchData["awayTeam"]["image"]["path"] + "128x128.jpeg",
+            url: url
+        }
+
+        const league: League = {
+            sportTypeId: 1,
+            countryCode: "DE",
+            id: undefined,
+            name: matchData["round"]["competitionSeason"]["name"]
+        }
+
+        const existingLeague = await findLeague(league.name, league.sportTypeId, league.countryCode)
+
+        if (existingLeague) {
+            bet.leagueId = existingLeague.id
+        } else {
+            const newLeague: League = await createLeague(league)
+            bet.leagueId = newLeague.id
+        }
+
+        return {
+            bet: bet,
+            league: league,
+            sportName: "Fußball",
+            country: "Deutschland"
+        }
+
+
+    } catch (error) {
+        console.error('Error:', error)
+    }
+}
+
+function extractFupaMatchString(url: string) {
+    const match = url.match(/\/match\/([^/]+)/);
+    return match ? match[1] : null;
+}
 async function scrapeFlashscore(url: string) {
     try {
         const response = await axios.get(url)
@@ -85,6 +142,5 @@ async function extractDataFromFlashscoreScript(script: string, url: string) {
         league: league,
         sportName: obj['sport'],
         country: obj['header']['tournament']['category']
-
     }
 }
