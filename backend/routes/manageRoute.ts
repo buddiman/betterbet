@@ -84,7 +84,10 @@ manageRoute.post('/missingBetEvents', async (req: Request, res: Response): Promi
             data.push({
                 eventId: missingBetEvent.id,
                 name: missingBetEvent.name,
-                count: missingBetEvent.Bet.length
+                count: missingBetEvent.Bet.length,
+                firstBetDate: missingBetEvent.Bet.reduce(function(prev, current) {
+                    return (prev.date < current.date) ? prev : current
+                }).date
             })
         }
     }
