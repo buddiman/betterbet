@@ -45,7 +45,6 @@ function App() {
     };
 
     const handleCloseNavMenu = (key: string | undefined) => {
-        console.log(key)
         if (typeof key === "string") {
             if (key === "dashboard") {
                 navigate('/')

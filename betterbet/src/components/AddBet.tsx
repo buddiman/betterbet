@@ -78,7 +78,6 @@ export default function AddBet(props: AddBetProps) {
             url: textFieldUrlValue,
             id: undefined
         }
-        console.log(bet)
         const response = await api.post("/bet", bet)
         props.onClose()
     }
@@ -109,14 +108,12 @@ export default function AddBet(props: AddBetProps) {
         const selectedEventId = event.target.value as string;
         const selectedEvent = eventList.find(event => event.id === parseInt(selectedEventId));
         setEventIdValue(selectedEvent?.id || null);
-        console.log(selectedEvent?.id || null)
     };
 
     const handleSelectLeagueChange = (event: SelectChangeEvent<any>) => {
         const selectedLeagueId = event.target.value as string;
         const selectedLeague = leagueList.find(league => league.id === parseInt(selectedLeagueId));
         setLeagueIdValue(selectedLeague?.id || null);
-        console.log(selectedLeague?.id || null)
     };
 
     const handleTypeChange = (event: SelectChangeEvent<string>) => {

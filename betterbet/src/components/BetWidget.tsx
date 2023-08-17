@@ -162,7 +162,6 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                     const response = await api.get(`/bets/${eventId}`)
                     if (response.data.bets.length === 0) {
                         setBets([dummyBet])
-                        console.log("EMPTY")
                     } else {
                         setBets(response.data.bets)
                     }
@@ -241,7 +240,6 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                     const response = await api.get(`/bets/${eventId}`)
                     if (response.data.bets.length === 0) {
                         setBets([dummyBet])
-                        console.log("EMPTY")
                     } else {
                         setBets(response.data.bets)
                     }
@@ -251,7 +249,6 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                 if (bet.id) {
                     const responseBetInstance = await api.get(`/betInstance/${currentUser?.id}/${bet.id}`)
                     const betInstance = responseBetInstance.data
-                    console.log(betInstance)
                 }
             } catch (error) {
                 console.error('Error fetching data from API:', error);
@@ -261,7 +258,6 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
     }, [eventId]);
 
     const handleNextBet = () => {
-        console.log("NEXT")
         setBetIndex((prevIndex) => {
             if (prevIndex === bets.length - 1) {
                 setSliderValue(0)
@@ -276,7 +272,6 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
     };
 
     const handlePreviousBet = () => {
-        console.log("PREVIOUS")
         setBetIndex((prevIndex) => {
             if (prevIndex === 0) {
                 setSliderValue(bets.length - 1)

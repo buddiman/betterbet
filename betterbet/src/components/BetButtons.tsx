@@ -12,7 +12,6 @@ const BetButtons: React.FC<BetButtonsProps> = ({buttonList, selectedButton, disa
 
     const handleBetButton = (key: string | undefined) => {
         if (typeof key === "string") {
-            console.log(key)
             onValueChange(key);
         }
     };
