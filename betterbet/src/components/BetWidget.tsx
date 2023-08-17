@@ -91,7 +91,7 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
     const handleBetButton = async (key: string | undefined) => {
         if (typeof key === "string") {
             setSelectedButton(key)
-            const response = await api.put('/betInstance', {
+            await api.put('/betInstance', {
                 betId: bet.id,
                 userId: currentUser?.id,
                 userBet: key,
@@ -127,7 +127,7 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
         if (!isLocked) {
             if (bet.type === "result") {
                 const updateBetInstance = async () => {
-                    const response = await api.put('/betInstance', {
+                     await api.put('/betInstance', {
                         betId: bet.id,
                         userId: currentUser?.id,
                         userBet: homeResult + ':' + awayResult,
@@ -248,10 +248,6 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                 }
                 const responseSportTypes = await api.get('/sporttypes')
                 setSportTypes(responseSportTypes.data.sportTypes)
-                if (bet.id) {
-                    const responseBetInstance = await api.get(`/betInstance/${currentUser?.id}/${bet.id}`)
-                    const betInstance = responseBetInstance.data
-                }
             } catch (error) {
                 console.error('Error fetching data from API:', error);
             }
@@ -293,14 +289,6 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
         justifyContent: 'center',
         padding: 1,
     };
-
-    const gridItemStyleMobile = {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 1,
-    };
-
 
     return (
         <div>
@@ -430,7 +418,7 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                                             label="Heimteam"
                                             fullWidth
                                             variant="standard"
-                                            disabled={isLocked === true}
+                                            disabled={isLocked}
                                         />
                                         :
                                         <TextField
@@ -443,7 +431,7 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                                             label="Auswärtsteam"
                                             fullWidth
                                             variant="standard"
-                                            disabled={isLocked === true}
+                                            disabled={isLocked}
                                         />
                                     </Grid>
 
@@ -665,7 +653,7 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                                             label="Heimteam"
                                             fullWidth
                                             variant="standard"
-                                            disabled={isLocked === true}
+                                            disabled={isLocked}
                                             style={{ maxWidth: '150px' }}
                                         />
                                         <TextField
@@ -678,7 +666,7 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                                             label="Auswärtsteam"
                                             fullWidth
                                             variant="standard"
-                                            disabled={isLocked === true}
+                                            disabled={isLocked}
                                             style={{ maxWidth: '150px' }}
                                         />
                                     </Paper>

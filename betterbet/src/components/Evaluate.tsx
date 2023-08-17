@@ -31,7 +31,7 @@ export default function Evaluate(props: EvaluateProps) {
     const evaluate = async () => {
         if (props.type === "result") {
             if (homeResult !== '' && awayResult !== '') {
-                const response = await api.post("/evaluate", {
+                await api.post("/evaluate", {
                     betId: props.betId,
                     type: props.type,
                     result: homeResult.trim() + ":" + awayResult.trim()
@@ -41,7 +41,7 @@ export default function Evaluate(props: EvaluateProps) {
                 console.log("Invalid inputs!")
             }
         } else {
-            const response = await api.post("/evaluate", {
+            await api.post("/evaluate", {
                 betId: props.betId,
                 type: props.type,
                 result: result

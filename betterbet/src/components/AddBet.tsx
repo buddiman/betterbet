@@ -79,7 +79,7 @@ export default function AddBet(props: AddBetProps) {
             url: textFieldUrlValue,
             id: undefined
         }
-        const response = await api.post("/bet", bet)
+        await api.post("/bet", bet)
         props.onClose()
     }
 

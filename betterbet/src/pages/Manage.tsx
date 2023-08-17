@@ -110,7 +110,7 @@ export default function Manage() {
         e.preventDefault()
 
         try {
-            const response = await api.post('/auth/resetPassword', {
+            await api.post('/auth/resetPassword', {
                 id: parseInt(enteredUserId, 10),
                 newPassword: newPassword
             })
