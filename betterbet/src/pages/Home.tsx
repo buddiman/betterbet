@@ -1,11 +1,14 @@
 import React, { FC, ReactElement, useEffect, useState } from "react";
 import { Box, Grid, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import RemoveIcon from '@mui/icons-material/Remove';
 import api from "../api";
 import * as AuthService from "../services/auth.service";
 
 interface UserPoints {
     username: string
     points: number
+    wins: number
 }
 
 interface MissingBetEvent {
@@ -18,6 +21,17 @@ interface MissingBetEvent {
 const Home: FC<any> = (): ReactElement => {
     const [userPoints, setUserPoints] = useState<UserPoints[] | undefined>(undefined)
     const [missingBetEvents, setMissingBetEvents] = useState<MissingBetEvent[] | undefined>(undefined)
+
+    const eventWinnerIcons = (count: number) => {
+        const icons = [];
+        if(count === 0) {
+            icons.push(<RemoveIcon color="error" />)
+        }
+        for (let i = 0; i < count; i++) {
+            icons.push(<MilitaryTechIcon color="success" />);
+        }
+        return icons;
+    };
 
     useEffect(() => {
         const fetchMissingBets = async () => {
@@ -72,6 +86,7 @@ const Home: FC<any> = (): ReactElement => {
                                 <TableRow>
                                     <TableCell align="center">User</TableCell>
                                     <TableCell align="center">Punkte</TableCell>
+                                    <TableCell align="center">Spieltagssiege</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -79,6 +94,7 @@ const Home: FC<any> = (): ReactElement => {
                                     <TableRow>
                                         <TableCell align="center">{e.username}</TableCell>
                                         <TableCell align="center">{e.points}</TableCell>
+                                        <TableCell align="center">{eventWinnerIcons(e.wins)}</TableCell>
                                     </TableRow>
                                 ))
                                 }
