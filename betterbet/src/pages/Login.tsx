@@ -1,7 +1,6 @@
-import React, { ReactElement, FC, useState } from "react";
-import { Box, TextField, Button } from "@mui/material";
+import React, { FC, ReactElement, useState } from "react";
+import { Box, Button, TextField } from "@mui/material";
 import { NavigateFunction, useNavigate } from 'react-router-dom';
-import axios from "axios";
 import { login } from "../services/auth.service"
 
 interface LoginFormProps {

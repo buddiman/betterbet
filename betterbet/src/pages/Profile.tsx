@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useState } from "react";
-import { Button, Grid, Paper, TextField, Typography, Box } from "@mui/material";
+import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import api from "../api";
 import * as AuthService from "../services/auth.service";
 
@@ -11,7 +11,7 @@ const Profile: FC = (): ReactElement => {
         e.preventDefault()
 
         try {
-            const response = await api.post('/auth/changePassword', {
+            await api.post('/auth/changePassword', {
                 id: AuthService.getCurrentUser().id,
                 oldPassword: oldPassword,
                 newPassword: newPassword

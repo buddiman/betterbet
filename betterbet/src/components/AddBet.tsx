@@ -3,10 +3,12 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, InputLabel,
+    DialogTitle,
+    InputLabel,
     MenuItem,
-    Select, SelectChangeEvent,
-    Stack, SxProps,
+    Select,
+    SelectChangeEvent,
+    Stack,
     TextField
 } from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
@@ -15,7 +17,6 @@ import api from "../api"
 import { Event } from "shared/models/event"
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { League } from "shared/models/league";
-import { Bet } from "shared/models/bet";
 import { SportType } from "shared/models/sportType";
 
 interface AddBetProps {
@@ -78,8 +79,7 @@ export default function AddBet(props: AddBetProps) {
             url: textFieldUrlValue,
             id: undefined
         }
-        console.log(bet)
-        const response = await api.post("/bet", bet)
+        await api.post("/bet", bet)
         props.onClose()
     }
 
@@ -109,14 +109,12 @@ export default function AddBet(props: AddBetProps) {
         const selectedEventId = event.target.value as string;
         const selectedEvent = eventList.find(event => event.id === parseInt(selectedEventId));
         setEventIdValue(selectedEvent?.id || null);
-        console.log(selectedEvent?.id || null)
     };
 
     const handleSelectLeagueChange = (event: SelectChangeEvent<any>) => {
         const selectedLeagueId = event.target.value as string;
         const selectedLeague = leagueList.find(league => league.id === parseInt(selectedLeagueId));
         setLeagueIdValue(selectedLeague?.id || null);
-        console.log(selectedLeague?.id || null)
     };
 
     const handleTypeChange = (event: SelectChangeEvent<string>) => {

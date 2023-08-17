@@ -40,7 +40,7 @@ export default function AddLeague(props: AddLeagueProps) {
             sportTypeId: sportTypeValue.id
 
         }
-        const response = await api.post("/league", league)
+        await api.post("/league", league)
         props.onClose()
     }
 

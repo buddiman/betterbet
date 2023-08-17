@@ -4,12 +4,10 @@ import {
     createUser,
     getAllUsernamesAndIds,
     getUserById,
-    getUserByUsername,
-    updateUser
+    getUserByUsername
 } from '../database/dto/user'
-import { hash, compare } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import { sign } from "jsonwebtoken";
-import { getBet } from "../database/dto/bet";
 import { betRoute } from "./betRoute";
 
 export const authRoute = express.Router()
@@ -19,6 +17,7 @@ const secretKey = 'super_secret_key_1234'
 
 authRoute.post('/auth/register', async (req: Request, res: Response): Promise<void> => {
     const user = req.body.user
+    user.username.toLowerCase()
 
     user.password = await hash(user.password, saltRounds)
 
@@ -85,7 +84,7 @@ authRoute.post('/auth/resetPassword', async (req: Request, res: Response): Promi
 })
 
 authRoute.post('/auth/login', async (req: Request, res: Response): Promise<void> => {
-    const username = req.body.username
+    const username = req.body.username.toLowerCase()
     const password = req.body.password
 
     const user = await getUserByUsername(username)

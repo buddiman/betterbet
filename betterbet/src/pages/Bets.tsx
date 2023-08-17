@@ -1,6 +1,6 @@
-import React, { ReactElement, FC, useEffect, useState } from "react";
-import { Box, Select, MenuItem, Stack, SelectChangeEvent, InputLabel } from "@mui/material";
-import BetWidget from '../components/BetWidget'
+import React, { FC, ReactElement, useEffect, useRef, useState } from "react";
+import { Box, InputLabel, MenuItem, Select, SelectChangeEvent, Stack } from "@mui/material";
+import BetWidget, { BetWidgetMethods } from '../components/BetWidget'
 import { Event } from "shared/models/event"
 import api from "../api"
 import * as AuthService from "../services/auth.service";
@@ -12,12 +12,17 @@ interface MissingBetEvent {
 }
 const Bets: FC<any> = (): ReactElement => {
     const [events, setEvents] = useState<Event[]>([]);
-    const [selectedEvent, setSelectedEvent] = useState<number>(1);
+    const [selectedEvent, setSelectedEvent] = useState<number|undefined>(1);
     const [missingBetEvents, setMissingBetEvents] = useState<MissingBetEvent[] | undefined>(undefined)
+    const betWidgetRef = useRef<BetWidgetMethods | null>(null);
 
     const handleSelectedEventChange = (event: SelectChangeEvent<any>) => {
         const eventId = event.target.value as number;
+        console.log(eventId)
         setSelectedEvent(eventId);
+        if(betWidgetRef.current) {
+            betWidgetRef.current?.onEventChange()
+        }
     };
 
     useEffect(() => {
@@ -25,7 +30,10 @@ const Bets: FC<any> = (): ReactElement => {
             try {
                 const user = AuthService.getCurrentUser()
                 const response = await api.get("/events");
-                setEvents(response.data.event);
+                const unfinishedEvents = response.data.event.filter((e: any) => new Date(e.to) > new Date())
+                setEvents(unfinishedEvents);
+
+                setSelectedEvent(unfinishedEvents[0].id)
                 const eventsWithMissingBets = await api.post("/missingBetEvents", {
                     userId: user.id
                 })
@@ -68,7 +76,7 @@ const Bets: FC<any> = (): ReactElement => {
                         </MenuItem>
                     ))}
                 </Select>
-                <BetWidget eventId={selectedEvent}/>
+                <BetWidget ref={betWidgetRef} eventId={selectedEvent}/>
             </Stack>
         </Box>
     );
