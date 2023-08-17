@@ -3,7 +3,9 @@ import {
     createBet,
     deleteBet,
     getBet,
-    getBetsForEvent, getBetsForEventWithBetInstances, getMissingBetsForEvent,
+    getBetsForEvent,
+    getBetsForEventWithBetInstances,
+    getMissingBetsForEvent,
     getNotEvaluatedBetsInThePast,
     updateBet
 } from '../database/dto/bet'

@@ -26,7 +26,7 @@ export default function AddEvent(props: AddEventProps) {
             from: datePickerFromValue,
             to: datePickerToValue
         }
-        const response = await api.post("/event", event)
+        await api.post("/event", event)
         props.onClose()
     }
 

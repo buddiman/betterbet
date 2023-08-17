@@ -1,5 +1,5 @@
 import { Button, Paper } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 
 interface BetButtonsProps {
     buttonList: string[]
@@ -12,7 +12,6 @@ const BetButtons: React.FC<BetButtonsProps> = ({buttonList, selectedButton, disa
 
     const handleBetButton = (key: string | undefined) => {
         if (typeof key === "string") {
-            console.log(key)
             onValueChange(key);
         }
     };
