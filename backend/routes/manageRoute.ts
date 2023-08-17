@@ -36,12 +36,31 @@ manageRoute.post('/evaluate', async (req: Request, res: Response): Promise<void>
 manageRoute.get('/userpoints', async (req: Request, res: Response): Promise<void> => {
     const points = await getBetInstancesPointsPerUserId()
     const users: User[] = await getAllUsers()
+    const userPointsPerEvent = await getPlayerPointsPerEvent()
+    const userWins = []
+
+    for(const user of users) {
+        userWins.push({
+            id: user.id,
+            wins: 0
+        })
+    }
+
+
+    for(const userPointsData of userPointsPerEvent) {
+        for(const userPointData of userPointsData.pointsPerUser) {
+            if(userPointData.points !== 0 && userPointData.hasMostPoints) {
+                userWins.find(uw => uw.id === userPointData.userId).wins += 1
+            }
+        }
+    }
 
     const userPoints = []
     for (const point of points) {
         userPoints.push({
             username: users.find(e => e.id === point.userId).username,
-            points: point._sum.points
+            points: point._sum.points,
+            wins: userWins.find(e => e.id === point.userId).wins
         })
     }
 
