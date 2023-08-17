@@ -24,6 +24,7 @@ interface MissingBetEvent {
     eventId: number
     name: string
     count: number
+    firstBetDate: string
 }
 
 const Home: FC<any> = (): ReactElement => {
@@ -107,6 +108,7 @@ const Home: FC<any> = (): ReactElement => {
                                 <TableRow>
                                     <TableCell align="center">Spieltag</TableCell>
                                     <TableCell align="center">Anzahl</TableCell>
+                                    <TableCell align="center">Bis wann?</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -114,6 +116,7 @@ const Home: FC<any> = (): ReactElement => {
                                     <TableRow>
                                         <TableCell align="center">{e.name}</TableCell>
                                         <TableCell align="center">{e.count}</TableCell>
+                                        <TableCell align="center">{new Date(e.firstBetDate).toLocaleString('de-DE')}</TableCell>
                                     </TableRow>
                                 ))
                                 }
