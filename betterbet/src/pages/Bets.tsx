@@ -12,12 +12,13 @@ interface MissingBetEvent {
 }
 const Bets: FC<any> = (): ReactElement => {
     const [events, setEvents] = useState<Event[]>([]);
-    const [selectedEvent, setSelectedEvent] = useState<number>(1);
+    const [selectedEvent, setSelectedEvent] = useState<number|undefined>(1);
     const [missingBetEvents, setMissingBetEvents] = useState<MissingBetEvent[] | undefined>(undefined)
     const betWidgetRef = useRef<BetWidgetMethods | null>(null);
 
     const handleSelectedEventChange = (event: SelectChangeEvent<any>) => {
         const eventId = event.target.value as number;
+        console.log(eventId)
         setSelectedEvent(eventId);
         if(betWidgetRef.current) {
             betWidgetRef.current?.onEventChange()
@@ -29,7 +30,10 @@ const Bets: FC<any> = (): ReactElement => {
             try {
                 const user = AuthService.getCurrentUser()
                 const response = await api.get("/events");
-                setEvents(response.data.event);
+                const unfinishedEvents = response.data.event.filter((e: any) => new Date(e.to) > new Date())
+                setEvents(unfinishedEvents);
+
+                setSelectedEvent(unfinishedEvents[0].id)
                 const eventsWithMissingBets = await api.post("/missingBetEvents", {
                     userId: user.id
                 })
