@@ -1,6 +1,6 @@
-import React, { ReactElement, FC, useEffect, useState } from "react";
+import React, { ReactElement, FC, useEffect, useState, useRef } from "react";
 import { Box, Select, MenuItem, Stack, SelectChangeEvent, InputLabel } from "@mui/material";
-import BetWidget from '../components/BetWidget'
+import BetWidget, {BetWidgetMethods} from '../components/BetWidget'
 import { Event } from "shared/models/event"
 import api from "../api"
 import * as AuthService from "../services/auth.service";
@@ -14,10 +14,14 @@ const Bets: FC<any> = (): ReactElement => {
     const [events, setEvents] = useState<Event[]>([]);
     const [selectedEvent, setSelectedEvent] = useState<number>(1);
     const [missingBetEvents, setMissingBetEvents] = useState<MissingBetEvent[] | undefined>(undefined)
+    const betWidgetRef = useRef<BetWidgetMethods | null>(null);
 
     const handleSelectedEventChange = (event: SelectChangeEvent<any>) => {
         const eventId = event.target.value as number;
         setSelectedEvent(eventId);
+        if(betWidgetRef.current) {
+            betWidgetRef.current?.onEventChange()
+        }
     };
 
     useEffect(() => {
@@ -68,7 +72,7 @@ const Bets: FC<any> = (): ReactElement => {
                         </MenuItem>
                     ))}
                 </Select>
-                <BetWidget eventId={selectedEvent}/>
+                <BetWidget ref={betWidgetRef} eventId={selectedEvent}/>
             </Stack>
         </Box>
     );

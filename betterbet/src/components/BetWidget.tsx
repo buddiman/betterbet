@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useEffect, useState } from "react";
+import React, { FC, ReactElement, useEffect, useImperativeHandle, useState, forwardRef } from "react";
 import {
     Grid,
     Button,
@@ -30,6 +30,10 @@ interface BetWidgetProps {
     eventId: number | undefined
 }
 
+export interface BetWidgetMethods {
+    onEventChange: () => void;
+}
+
 const betTypes = [
     {key: "1X2", sentence: "Wie ist die Tendenz zu Spielende (Ohne Verlängerung)?"},
     {key: "winner", sentence: "Wer gewinnt das Spiel?"},
@@ -55,7 +59,7 @@ const dummyBet: Bet = {
     url: null
 }
 
-const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
+const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps> = ({eventId}, ref): ReactElement => {
     const [selectedButton, setSelectedButton] = useState('');
     const [currentUser, setCurrentUser] = useState<IUser | undefined>(undefined);
     const [betType, setBetType] = useState('1X2')
@@ -74,6 +78,14 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
 
     const isMobile = window.matchMedia('(max-width: 767px)').matches
 
+    const onEventChange = () => {
+        setBetIndex(0)
+        setSliderValue(0)
+    };
+
+    useImperativeHandle(ref, () => ({
+        onEventChange,
+    }));
     const handleBetButton = async (key: string | undefined) => {
         if (typeof key === "string") {
             setSelectedButton(key)
@@ -130,7 +142,6 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     useEffect(() => {
         const user = AuthService.getCurrentUser()
         setCurrentUser(user)
-
     }, [])
 
     const handleSliderChange = (event: Event, newValue: number | number[]) => {
@@ -696,4 +707,4 @@ const BetWidget: FC<BetWidgetProps> = ({eventId}): ReactElement => {
     )
 }
 
-export default BetWidget
+export default forwardRef(BetWidget)
