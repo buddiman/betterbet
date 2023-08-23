@@ -30,7 +30,7 @@ const Bets: FC<any> = (): ReactElement => {
             try {
                 const user = AuthService.getCurrentUser()
                 const response = await api.get("/events");
-                const unfinishedEvents = response.data.event.filter((e: any) => new Date(e.to) > new Date())
+                const unfinishedEvents = response.data.event.filter((e: any) => new Date(e.to) >= new Date())
                 setEvents(unfinishedEvents);
 
                 setSelectedEvent(unfinishedEvents[0].id)
