@@ -40,12 +40,17 @@ export default function Evaluate(props: EvaluateProps) {
             } else {
                 console.log("Invalid inputs!")
             }
+        } else if(props.type === "placement") {
+            await api.post("/evaluate", {
+                betId: props.betId,
+                type: props.type,
+                result: result
+            })
         } else {
             await api.post("/evaluate", {
                 betId: props.betId,
                 type: props.type,
                 result: result
-
             })
         }
         props.onClose()
@@ -77,6 +82,20 @@ export default function Evaluate(props: EvaluateProps) {
                 {props.type === 'question' && (
                     <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton} disabled={false}
                                 onValueChange={handleBetButton}/>
+                )}
+                {props.type === 'placement' && (
+                    <div>
+                        <TextField
+                            value={result}
+                            onChange={(e) => setResult(e.target.value)}
+                            autoFocus
+                            margin="dense"
+                            id="textFieldPlacementResult"
+                            label="Liste"
+                            fullWidth
+                            variant="standard"
+                        />
+                    </div>
                 )}
                 {props.type === 'result' && (
                     <div>
