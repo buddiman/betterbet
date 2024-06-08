@@ -282,5 +282,6 @@ const betTypes = [
     "winner",
     "overunder",
     "question",
-    "1or2"
+    "1or2",
+    "placement"
 ]

@@ -27,7 +27,23 @@ export function calculatePointsForBet(result: string, type: string, userBet: str
         }
         // falsch = 0
         return 0
-    } else {
+    } else if (type === "placement") {
+        let resultList = result.split(';').filter(item => item.trim() !== '')
+        let userBetList = userBet.split(';').filter(item => item.trim() !== '')
+        let points = 0
+
+        for(let i = 0; i < resultList.length; i++) {
+            if(resultList[i] === userBetList[i]) {
+                console.log(resultList[i] + " is correct same as " +  userBetList[i])
+                points += 2
+            } else {
+                console.log(resultList[i] + " is NOT correct same as " +  userBetList[i])
+            }
+        }
+
+        return points
+    }
+    else {
         if(userBet === result) {
             return 2
         }
