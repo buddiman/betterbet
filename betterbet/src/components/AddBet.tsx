@@ -52,7 +52,7 @@ export default function AddBet(props: AddBetProps) {
             try {
                 if(isOpened) {
                     const response = await api.get("/events")
-                    setEventList(response.data.event);
+                    setEventList(response.data.event.reverse());
                     const leagueResponse = await api.get("/leagues")
                     setLeagueList(leagueResponse.data.league)
                 }
@@ -283,5 +283,6 @@ const betTypes = [
     "overunder",
     "question",
     "1or2",
-    "placement"
+    "placement",
+    "half-fulltime"
 ]
