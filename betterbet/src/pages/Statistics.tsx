@@ -80,7 +80,7 @@ const Statistics: FC = (): ReactElement => {
         const fetchData = async () => {
             try {
                 const response = await api.get("/events")
-                setEventList(response.data.event);
+                setEventList(response.data.event.reverse());
                 const usersResponse = await api.get("/users")
                 setUserList(usersResponse.data.users.sort((a: UsernameWithId, b: UsernameWithId) => (a.id > b.id) ? 1 : -1))
                 const pointsResponse = await api.get('userpointsperevent')

@@ -48,7 +48,7 @@ export default function Manage() {
         const fetchData = async () => {
             try {
                 const response = await api.get("/events")
-                setEventList(response.data.event);
+                setEventList(response.data.event.reverse());
             } catch (error) {
                 console.error('Error fetching data from API:', error);
             }
