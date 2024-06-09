@@ -26,10 +26,17 @@ const Home: FC<any> = (): ReactElement => {
         const icons = [];
         if(count === 0) {
             icons.push(<RemoveIcon color="error" />)
+        } else {
+            let lessThanFive = count % 5;
+            let fiveTimesWins = (count / 5) | 0
+            for (let i = 0; i < fiveTimesWins; i++) {
+                icons.push(<MilitaryTechIcon color="warning" fontSize="medium"/>);
+            }
+            for (let i = 0; i < lessThanFive; i++) {
+                icons.push(<MilitaryTechIcon color="success" fontSize="small"/>);
+            }
         }
-        for (let i = 0; i < count; i++) {
-            icons.push(<MilitaryTechIcon color="success" />);
-        }
+
         return icons;
     };
 

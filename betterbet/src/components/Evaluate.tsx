@@ -71,6 +71,10 @@ export default function Evaluate(props: EvaluateProps) {
                     <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton} disabled={false}
                                 onValueChange={handleBetButton}/>
                 )}
+                {props.type === 'half-fulltime' && (
+                    <BetButtons buttonList={["1-1", "2-2", "X-X", "1-2", "1-X", "2-1", "2-X", "X-1", "X-2"]} selectedButton={selectedButton} disabled={false}
+                                onValueChange={handleBetButton}/>
+                )}
                 {(props.type === 'winner' || props.type === '1or2') && (
                     <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton} disabled={false}
                                 onValueChange={handleBetButton}/>

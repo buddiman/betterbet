@@ -548,7 +548,9 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                             {betType === 'placement' && (
                                 <Grid item xs={10} style={gridItemStyle}>
                                     <Paper variant="outlined">
-                                        <ReorderableList itemsUnordered={bet.typeCondition ?? ''} itemsOrderedByUser={betInstance?.userBet ?? ''} onValueChange={handlePlacementListChange} isLocked={isLocked}/>
+                                        <ReorderableList itemsUnordered={bet.typeCondition ?? ''}
+                                                         itemsOrderedByUser={betInstance?.userBet ?? ''}
+                                                         onValueChange={handlePlacementListChange} isLocked={isLocked}/>
                                     </Paper>
                                 </Grid>
 
@@ -561,7 +563,7 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                                                 <Avatar
                                                     alt="Home Team"
                                                     src={bet.teamHomeUrl}
-                                                    sx={{ width: 120, height: 120 }}
+                                                    sx={{width: 120, height: 120}}
                                                     variant="square"
                                                 />
                                             )}
@@ -578,7 +580,7 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                                                 <Avatar
                                                     alt="Away Team"
                                                     src={bet.teamAwayUrl}
-                                                    sx={{ width: 120, height: 120 }}
+                                                    sx={{width: 120, height: 120}}
                                                     variant="square"
                                                 />
                                             )}
@@ -587,15 +589,15 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                                 </>
                             )}
 
-                        <Grid item xs={1}>
-                        </Grid>
+                            <Grid item xs={1}>
+                            </Grid>
 
-                        {/*row end*/}
-                        <Grid item xs={1}>
-                            <Fab color='primary' aria-label='previous-bet' onClick={handlePreviousBet}>
-                                <ArrowBackIosIcon/>
-                            </Fab>
-                        </Grid>
+                            {/*row end*/}
+                            <Grid item xs={1}>
+                                <Fab color='primary' aria-label='previous-bet' onClick={handlePreviousBet}>
+                                    <ArrowBackIosIcon/>
+                                </Fab>
+                            </Grid>
                             {betType === 'placement' && (
                                 <Grid item xs={3} style={gridItemStyle}>
                                 </Grid>
@@ -610,34 +612,34 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                                 </Grid>
                             )}
 
-                        <Grid item xs={4} style={gridItemStyle}>
-                            <Paper variant="outlined">
-                                <Stack spacing={1}>
-                                    {league && (
-                                        <Typography variant="body2" gutterBottom>
-                                            <ReactCountryFlag
-                                                countryCode={league.countryCode}
-                                                className="emojiFlag" style={{
-                                                fontSize: '2em',
-                                                lineHeight: '2em',
-                                            }}
-                                            /> - {sportTypeName} - {league.name}
+                            <Grid item xs={4} style={gridItemStyle}>
+                                <Paper variant="outlined">
+                                    <Stack spacing={1}>
+                                        {league && (
+                                            <Typography variant="body2" gutterBottom>
+                                                <ReactCountryFlag
+                                                    countryCode={league.countryCode}
+                                                    className="emojiFlag" style={{
+                                                    fontSize: '2em',
+                                                    lineHeight: '2em',
+                                                }}
+                                                /> - {sportTypeName} - {league.name}
+                                            </Typography>
+
+                                        )}
+                                        {bet.url && (
+                                            <Button variant='outlined' href={bet.url} target="_blank">
+                                                <OpenInNewIcon/> Infos
+                                            </Button>
+
+                                        )}
+                                        <Typography variant="h6" gutterBottom style={{textAlign: "center"}}>
+                                            {bet.date && (
+                                                new Date(bet.date).toLocaleString('de-DE'))}
                                         </Typography>
-
-                                    )}
-                                    {bet.url && (
-                                        <Button variant='outlined' href={bet.url} target="_blank">
-                                            <OpenInNewIcon/> Infos
-                                        </Button>
-
-                                    )}
-                                    <Typography variant="h6" gutterBottom style={{textAlign: "center"}}>
-                                        {bet.date && (
-                                            new Date(bet.date).toLocaleString('de-DE'))}
-                                    </Typography>
-                                </Stack>
-                            </Paper>
-                        </Grid>
+                                    </Stack>
+                                </Paper>
+                            </Grid>
                             {betType === 'placement' && (
                                 <Grid item xs={3} style={gridItemStyle}>
                                 </Grid>
@@ -651,96 +653,102 @@ const BetWidget: React.ForwardRefRenderFunction<BetWidgetMethods, BetWidgetProps
                                     </Paper>
                                 </Grid>
                             )}
-                        <Grid item xs={1}>
-                            <Fab color='primary' aria-label='previous-bet' onClick={handleNextBet}>
-                                <ArrowForwardIosIcon/>
-                            </Fab>
-                        </Grid>
+                            <Grid item xs={1}>
+                                <Fab color='primary' aria-label='previous-bet' onClick={handleNextBet}>
+                                    <ArrowForwardIosIcon/>
+                                </Fab>
+                            </Grid>
 
-                        {/* row end
+                            {/* row end
                     start bet controls*/}
-                        <Grid item xs={1}/>
-                        {betType === '1X2' && (
-                            <Grid item xs={10} style={gridItemStyle}>
-                                <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton}
-                                            disabled={isLocked} onValueChange={handleBetButton}/>
-                            </Grid>
-                        )}
-                        {(betType === 'winner' || betType === '1or2') && (
-                            <Grid item xs={10} style={gridItemStyle}>
-                                <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton}
-                                            disabled={isLocked} onValueChange={handleBetButton}/>
-                            </Grid>
-                        )}
-                        {betType === 'overunder' && (
-                            <Grid item xs={10} style={gridItemStyle}>
-                                <BetButtons buttonList={["Über", "Unter"]} selectedButton={selectedButton}
-                                            disabled={isLocked} onValueChange={handleBetButton}/>
-                            </Grid>
-                        )}
-                        {betType === 'placement' && (
-                            <Grid item xs={10} style={gridItemStyle}>
-                            </Grid>
-                        )}
-                        {betType === 'question' && (
-                            <Grid item xs={10} style={gridItemStyle}>
-                                <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton}
-                                            disabled={isLocked} onValueChange={handleBetButton}/>
-                            </Grid>
-                        )}
-                        {betType === 'result' && (
+                            <Grid item xs={1}/>
+                            {betType === '1X2' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <BetButtons buttonList={["1", "X", "2"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
+                                </Grid>
+                            )}
+                            {(betType === 'winner' || betType === '1or2') && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <BetButtons buttonList={["1", "2"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
+                                </Grid>
+                            )}
+                            {betType === 'overunder' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <BetButtons buttonList={["Über", "Unter"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
+                                </Grid>
+                            )}
+                            {betType === 'half-fulltime' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <BetButtons buttonList={["1-1", "2-2", "X-X", "1-2", "1-X", "2-1", "2-X", "X-1", "X-2"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
+                                </Grid>
+                            )}
+                            {betType === 'placement' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                </Grid>
+                            )}
+                            {betType === 'question' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <BetButtons buttonList={["Ja", "Nein"]} selectedButton={selectedButton}
+                                                disabled={isLocked} onValueChange={handleBetButton}/>
+                                </Grid>
+                            )}
+                            {betType === 'result' && (
+                                <Grid item xs={10} style={gridItemStyle}>
+                                    <Paper variant="outlined">
+                                        <TextField
+                                            value={homeResult}
+                                            onChange={(e) => setHomeResult(e.target.value)}
+                                            autoFocus
+                                            type="number"
+                                            margin="dense"
+                                            id="textFieldHomeResult"
+                                            label="Heimteam"
+                                            fullWidth
+                                            variant="standard"
+                                            disabled={isLocked}
+                                            style={{maxWidth: '150px'}}
+                                        />
+                                        <TextField
+                                            value={awayResult}
+                                            onChange={(e) => setAwayResult(e.target.value)}
+                                            autoFocus
+                                            type="number"
+                                            margin="dense"
+                                            id="textFieldAwayResult"
+                                            label="Auswärtsteam"
+                                            fullWidth
+                                            variant="standard"
+                                            disabled={isLocked}
+                                            style={{maxWidth: '150px'}}
+                                        />
+                                    </Paper>
+                                </Grid>
+                            )}
+                            <Grid item xs={1}/>
+
+                            {/* row end */}
+                            <Grid item xs={1}/>
                             <Grid item xs={10} style={gridItemStyle}>
                                 <Paper variant="outlined">
-                                    <TextField
-                                        value={homeResult}
-                                        onChange={(e) => setHomeResult(e.target.value)}
-                                        autoFocus
-                                        type="number"
-                                        margin="dense"
-                                        id="textFieldHomeResult"
-                                        label="Heimteam"
-                                        fullWidth
-                                        variant="standard"
-                                        disabled={isLocked}
-                                        style={{maxWidth: '150px'}}
-                                    />
-                                    <TextField
-                                        value={awayResult}
-                                        onChange={(e) => setAwayResult(e.target.value)}
-                                        autoFocus
-                                        type="number"
-                                        margin="dense"
-                                        id="textFieldAwayResult"
-                                        label="Auswärtsteam"
-                                        fullWidth
-                                        variant="standard"
-                                        disabled={isLocked}
-                                        style={{maxWidth: '150px'}}
-                                    />
+                                    {betType === 'placement' && (
+                                        <Typography style={{wordWrap: 'break-word', overflowWrap: 'break-word'}}>
+                                            {bet.question}
+                                        </Typography>
+                                    )}
+                                    {betType !== 'placement' && (
+                                        <Typography style={{wordWrap: 'break-word', overflowWrap: 'break-word'}}>
+                                            {betTypes.find((e) => e.key === bet.type)?.sentence ?? ""}{bet.typeCondition}{bet.question}
+                                        </Typography>
+                                    )}
                                 </Paper>
                             </Grid>
-                        )}
-                        <Grid item xs={1}/>
-
-                        {/* row end */}
-                        <Grid item xs={1}/>
-                        <Grid item xs={10} style={gridItemStyle}>
-                            <Paper variant="outlined">
-                                {betType === 'placement' && (
-                                    <Typography style={{wordWrap: 'break-word', overflowWrap: 'break-word'}}>
-                                        {bet.question}
-                                    </Typography>
-                                )}
-                                {betType !== 'placement' && (
-                                    <Typography style={{wordWrap: 'break-word', overflowWrap: 'break-word'}}>
-                                        {betTypes.find((e) => e.key === bet.type)?.sentence ?? ""}{bet.typeCondition}{bet.question}
-                                    </Typography>
-                                )}
-                            </Paper>
+                            <Grid item xs={1}/>
                         </Grid>
-                        <Grid item xs={1}/>
-                    </Grid>
-                </Box>
+                    </Box>
                 )
             }
         </div>
