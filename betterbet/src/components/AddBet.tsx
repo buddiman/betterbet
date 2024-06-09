@@ -283,5 +283,6 @@ const betTypes = [
     "overunder",
     "question",
     "1or2",
-    "placement"
+    "placement",
+    "half-fulltime"
 ]
